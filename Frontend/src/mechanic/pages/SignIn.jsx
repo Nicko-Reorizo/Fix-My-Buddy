@@ -1,5 +1,6 @@
-// FE-04: migration placeholder. Replace only this file with the credited source.
-export function SignIn() {
-  return <section style={{ padding: '2rem' }} aria-label="SignIn"><h1>SignIn</h1><p>Page assigned to Member 4 — awaiting migration</p></section>;
-}
+import { AuthLayout } from '../../../customer-side/src/components/auth/AuthLayout';
+import { SignIn as SharedSignIn } from '../../../customer-side/src/pages/auth/SignIn';
 
+export function SignIn() {
+  return <AuthLayout role="mechanic"><SharedSignIn role="mechanic" /></AuthLayout>;
+}

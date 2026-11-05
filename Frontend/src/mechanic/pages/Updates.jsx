@@ -1,5 +1,5 @@
-// FE-04: migration placeholder. Replace only this file with the credited source.
-export function Updates() {
-  return <section style={{ padding: '2rem' }} aria-label="Updates"><h1>Updates</h1><p>Page assigned to Member 4 — awaiting migration</p></section>;
-}
+import { LiveUpdates } from './LiveWorkspace';
 
+export function Updates() {
+  return <LiveUpdates />;
+}

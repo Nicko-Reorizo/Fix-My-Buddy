@@ -1,0 +1,12 @@
+.demo-launcher { position: fixed; bottom: calc(100px + env(safe-area-inset-bottom, 0px)); right: 12px; z-index: 12000; padding: 8px 12px; border: 1px solid #9caeaa; border-radius: 20px; background: #11241f; color: #fff; box-shadow: 0 2px 8px #0003; font: 12px/1.2 system-ui, sans-serif; cursor: pointer; }
+.demo-launcher:focus-visible { outline: 2px solid #ffda45; outline-offset: 2px; }
+.demo-panel { position: fixed; bottom: calc(142px + env(safe-area-inset-bottom, 0px)); right: 10px; z-index: 12001; width: min(460px, calc(100vw - 20px)); max-height: calc(100dvh - 164px); overflow: auto; padding: 20px; border: 1px solid #71867b; border-radius: 12px; background: #11241f; color: #fff; box-shadow: 0 12px 40px #0007; font: 14px/1.5 system-ui, sans-serif; }
+.demo-panel h2 { margin: 0; font-size: 20px; color: #ffda45; }
+.demo-panel p { margin: 12px 0; }
+.demo-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.demo-panel button { padding: 9px 12px; color: #fff; background: #244239; border: 1px solid #628474; border-radius: 7px; font: inherit; text-align: left; cursor: pointer; }
+.demo-panel button:hover, .demo-panel button:focus-visible { outline: 2px solid #ffda45; }
+.demo-panel details { border-top: 1px solid #628474; padding: 10px 0; }
+.demo-panel summary { cursor: pointer; font-weight: bold; }
+.demo-page-list { display: grid; gap: 6px; margin-top: 10px; }
+.demo-page-list small { display: block; color: #c4d7cd; font-size: 11px; overflow-wrap: anywhere; }

@@ -1,0 +1,4 @@
+{
+  "headers": [{ "source": "/:path*", "headers": [{ "key": "Permissions-Policy", "value": "geolocation=(self)" }] }],
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}

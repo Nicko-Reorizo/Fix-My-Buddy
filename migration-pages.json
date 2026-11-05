@@ -1,0 +1,537 @@
+[
+  {
+    "member": 1,
+    "file": "Frontend/customer-side/src/pages/auth/Welcome.jsx",
+    "label": "Welcome",
+    "path": "/demo/welcome",
+    "role": "guest",
+    "exports": [
+      "PickupPreview",
+      "Welcome"
+    ]
+  },
+  {
+    "member": 1,
+    "file": "Frontend/customer-side/src/pages/auth/SignUp.jsx",
+    "label": "SignUp",
+    "path": "/signup",
+    "role": "guest",
+    "exports": [
+      "SignUp"
+    ]
+  },
+  {
+    "member": 1,
+    "file": "Frontend/customer-side/src/pages/auth/SignIn.jsx",
+    "label": "SignIn",
+    "path": "/signin",
+    "role": "guest",
+    "exports": [
+      "SignIn"
+    ]
+  },
+  {
+    "member": 1,
+    "file": "Frontend/customer-side/src/pages/auth/ForgotPassword.jsx",
+    "label": "ForgotPassword",
+    "path": "/forgot-password",
+    "role": "guest",
+    "exports": [
+      "ForgotPassword"
+    ]
+  },
+  {
+    "member": 1,
+    "file": "Frontend/customer-side/src/pages/auth/Permissions.jsx",
+    "label": "Permissions",
+    "path": "/permissions",
+    "role": "guest",
+    "exports": [
+      "Permissions"
+    ]
+  },
+  {
+    "member": 1,
+    "file": "Frontend/customer-side/src/pages/auth/SafetyProfile.jsx",
+    "label": "SafetyProfile",
+    "path": "/profile",
+    "role": "guest",
+    "exports": [
+      "SafetyProfile"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/RequestAssistance.jsx",
+    "label": "RequestAssistance",
+    "path": "/request",
+    "role": "customer",
+    "exports": [
+      "RequestAssistance"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/RequestDetails.jsx",
+    "label": "RequestDetails",
+    "path": "/request/details",
+    "role": "customer",
+    "exports": [
+      "RequestDetails"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/RequestMatching.jsx",
+    "label": "RequestMatching",
+    "path": "/request/matching",
+    "role": "customer",
+    "exports": [
+      "RequestMatching"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/TowingRequest.jsx",
+    "label": "TowingRequest",
+    "path": "/request/towing",
+    "role": "customer",
+    "exports": [
+      "TowingRequest"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/PickupLocation.jsx",
+    "label": "PickupLocation",
+    "path": "/location",
+    "role": "customer",
+    "exports": [
+      "PickupLocation"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/ConfirmLocation.jsx",
+    "label": "ConfirmLocation",
+    "path": "/confirm-location",
+    "role": "customer",
+    "exports": [
+      "ConfirmLocation"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/Providers.jsx",
+    "label": "Providers",
+    "path": "/providers",
+    "role": "customer",
+    "exports": [
+      "Providers"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/ProviderFilters.jsx",
+    "label": "ProviderFilters",
+    "path": "/provider-filters",
+    "role": "customer",
+    "exports": [
+      "ProviderFilters"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/ProviderProfile.jsx",
+    "label": "ProviderProfile",
+    "path": "/providers/demo-provider",
+    "role": "customer",
+    "exports": [
+      "ProviderProfile"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/NoProviders.jsx",
+    "label": "NoProviders",
+    "path": "/demo/no-providers",
+    "role": "customer",
+    "exports": [
+      "NoProviders"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/ConfirmRequest.jsx",
+    "label": "ConfirmRequest",
+    "path": "/confirm-request",
+    "role": "customer",
+    "exports": [
+      "ConfirmRequest"
+    ]
+  },
+  {
+    "member": 2,
+    "file": "Frontend/customer-side/src/pages/Services.jsx",
+    "label": "Services",
+    "path": "/demo/services",
+    "role": "customer",
+    "exports": [
+      "Services"
+    ]
+  },
+  {
+    "member": 3,
+    "file": "Frontend/customer-side/src/pages/ActiveService.jsx",
+    "label": "ActiveService",
+    "path": "/bookings/demo-active/service",
+    "role": "customer",
+    "exports": [
+      "ActiveService"
+    ]
+  },
+  {
+    "member": 3,
+    "file": "Frontend/customer-side/src/pages/History.jsx",
+    "label": "History",
+    "path": "/history",
+    "role": "customer",
+    "exports": [
+      "History"
+    ]
+  },
+  {
+    "member": 3,
+    "file": "Frontend/customer-side/src/pages/ProviderChat.jsx",
+    "label": "ProviderChat",
+    "path": "/bookings/demo-active/provider-chat",
+    "role": "customer",
+    "exports": [
+      "ProviderChat"
+    ]
+  },
+  {
+    "member": 3,
+    "file": "Frontend/customer-side/src/pages/TowingChat.jsx",
+    "label": "TowingChat",
+    "path": "/bookings/demo-towing/towing-chat",
+    "role": "customer",
+    "exports": [
+      "TowingChat"
+    ]
+  },
+  {
+    "member": 3,
+    "file": "Frontend/customer-side/src/pages/PaymentCheckout.jsx",
+    "label": "PaymentCheckout",
+    "path": "/bookings/demo-active/pay",
+    "role": "customer",
+    "exports": [
+      "PaymentCheckout"
+    ]
+  },
+  {
+    "member": 3,
+    "file": "Frontend/customer-side/src/pages/Updates.jsx",
+    "label": "Updates",
+    "path": "/updates",
+    "role": "customer",
+    "exports": [
+      "Updates"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Welcome.jsx",
+    "label": "Welcome",
+    "path": "/mechanic",
+    "role": "mechanic",
+    "exports": [
+      "Welcome"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/SignIn.jsx",
+    "label": "SignIn",
+    "path": "/mechanic/signin",
+    "role": "mechanic",
+    "exports": [
+      "SignIn"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Availability.jsx",
+    "label": "Availability",
+    "path": "/mechanic/availability",
+    "role": "mechanic",
+    "exports": [
+      "Availability"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Jobs.jsx",
+    "label": "Jobs",
+    "path": "/mechanic/jobs",
+    "role": "mechanic",
+    "exports": [
+      "Jobs"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/JobOffer.jsx",
+    "label": "JobOffer",
+    "path": "/mechanic/jobs/demo-pending",
+    "role": "mechanic",
+    "exports": [
+      "JobOffer"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/JobTravel.jsx",
+    "label": "JobTravel",
+    "path": "/mechanic/jobs/demo-active/travel",
+    "role": "mechanic",
+    "exports": [
+      "JobTravel"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/VerifyArrival.jsx",
+    "label": "VerifyArrival",
+    "path": "/mechanic/jobs/demo-active/arrival",
+    "role": "mechanic",
+    "exports": [
+      "VerifyArrival"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Diagnosis.jsx",
+    "label": "Diagnosis",
+    "path": "/mechanic/jobs/demo-repair/diagnosis",
+    "role": "mechanic",
+    "exports": [
+      "Diagnosis"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Quote.jsx",
+    "label": "Quote",
+    "path": "/mechanic/jobs/demo-repair/quote",
+    "role": "mechanic",
+    "exports": [
+      "Quote"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/AdditionalWork.jsx",
+    "label": "AdditionalWork",
+    "path": "/mechanic/jobs/demo-repair/additional-work",
+    "role": "mechanic",
+    "exports": [
+      "AdditionalWork"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/RepairProgress.jsx",
+    "label": "RepairProgress",
+    "path": "/mechanic/jobs/demo-repair/progress",
+    "role": "mechanic",
+    "exports": [
+      "RepairProgress"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/TowingHandover.jsx",
+    "label": "TowingHandover",
+    "path": "/mechanic/jobs/demo-towing/handover",
+    "role": "mechanic",
+    "exports": [
+      "TowingHandover"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/JobComplete.jsx",
+    "label": "JobComplete",
+    "path": "/mechanic/jobs/demo-completed/complete",
+    "role": "mechanic",
+    "exports": [
+      "JobComplete"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Earnings.jsx",
+    "label": "Earnings",
+    "path": "/mechanic/earnings",
+    "role": "mechanic",
+    "exports": [
+      "Earnings"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Updates.jsx",
+    "label": "Updates",
+    "path": "/mechanic/updates",
+    "role": "mechanic",
+    "exports": [
+      "Updates"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/Account.jsx",
+    "label": "Account",
+    "path": "/mechanic/account",
+    "role": "mechanic",
+    "exports": [
+      "Account"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/LiveWorkspace.jsx",
+    "label": "LiveWorkspace",
+    "path": "/mechanic/jobs",
+    "role": "mechanic",
+    "exports": [
+      "LiveAccount",
+      "LiveJobs",
+      "LiveJob",
+      "LiveEarnings",
+      "LiveUpdates"
+    ]
+  },
+  {
+    "member": 4,
+    "file": "Frontend/src/mechanic/pages/MechanicChat.jsx",
+    "label": "MechanicChat",
+    "path": "/mechanic/jobs/demo-active/chat",
+    "role": "mechanic",
+    "exports": [
+      "MechanicChat"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/Home.jsx",
+    "label": "Home",
+    "path": "/",
+    "role": "customer",
+    "exports": [
+      "Home"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/AppHome.jsx",
+    "label": "AppHome",
+    "path": "/app",
+    "role": "customer",
+    "exports": [
+      "AppHome"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/Account.jsx",
+    "label": "Account",
+    "path": "/account",
+    "role": "customer",
+    "exports": [
+      "Account"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/AccountProfile.jsx",
+    "label": "AccountProfile",
+    "path": "/account/personal",
+    "role": "customer",
+    "exports": [
+      "AccountProfile"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/AccountSettings.jsx",
+    "label": "AccountSettings",
+    "path": "/settings/appearance",
+    "role": "customer",
+    "exports": [
+      "AccountSettings"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/Vehicles.jsx",
+    "label": "Vehicles",
+    "path": "/vehicles",
+    "role": "customer",
+    "exports": [
+      "Vehicles"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/HelpCenter.jsx",
+    "label": "HelpCenter",
+    "path": "/help",
+    "role": "customer",
+    "exports": [
+      "HelpCenter"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/SupportChat.jsx",
+    "label": "SupportChat",
+    "path": "/help/chat",
+    "role": "customer",
+    "exports": [
+      "SupportChat"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/Disputes.jsx",
+    "label": "Disputes",
+    "path": "/help/disputes",
+    "role": "customer",
+    "exports": [
+      "Disputes"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/PolicyPage.jsx",
+    "label": "PolicyPage",
+    "path": "/terms",
+    "role": "customer",
+    "exports": [
+      "PolicyPage"
+    ]
+  },
+  {
+    "member": 5,
+    "file": "Frontend/customer-side/src/pages/NotFound.jsx",
+    "label": "NotFound",
+    "path": "/demo-page-not-found",
+    "role": "customer",
+    "exports": [
+      "NotFound"
+    ]
+  }
+]

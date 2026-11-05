@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+.vite/
+.npm-cache/
+coverage/
+.env
+.env.*
+!.env.example
+*.log
+screenshots/
+
+# Local preservation and verification workspace
+.migration-backup/

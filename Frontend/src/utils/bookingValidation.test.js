@@ -1,0 +1,32 @@
+import assert from 'node:assert/strict';
+import { defaultProviderFilters, filterCount, isProviderRecord, safeMediaUrl, validEstimate, validateFilters } from './bookingValidation.js';
+import { formatCurrency } from './formatters.js';
+
+const quote = { id: 'unit-quote', version: 1, currency: 'PHP', items: [{ label: 'Visit', amount: 100 }, { label: 'Diagnosis', amount: 50.5 }], total: 150.5 };
+assert.equal(validEstimate(quote), true);
+assert.equal(validEstimate({ ...quote, total: 151 }), false);
+assert.equal(validEstimate({ ...quote, total: -1 }), false);
+assert.equal(validEstimate({ ...quote, currency: 'USD' }), false);
+assert.equal(validEstimate({ ...quote, items: [] }), false);
+assert.equal(validEstimate({ ...quote, expiresAt: '2000-01-01' }), false);
+assert.equal(validEstimate({ ...quote, expiresAt: 'invalid' }), false);
+assert.equal(validEstimate({ ...quote, items: [{ label: 'Visit', amount: NaN }] }), false);
+assert.equal(validEstimate(null), false);
+assert.equal(validEstimate({ ...quote, items: [null] }), false);
+assert.equal(validEstimate({ ...quote, version: undefined }), false);
+assert.equal(isProviderRecord({ id: 'test', name: 'Test' }), true);
+assert.equal(isProviderRecord({ id: 'test', name: 'Test', specialties: [{}] }), false);
+assert.equal(isProviderRecord({ id: 'test', name: 'Test', customerReviews: [null] }), false);
+assert.equal(validateFilters(defaultProviderFilters), '');
+assert.notEqual(validateFilters({ ...defaultProviderFilters, radiusKm: 31 }), '');
+assert.notEqual(validateFilters({ ...defaultProviderFilters, maximumVisitPrice: -1 }), '');
+assert.equal(validateFilters({ ...defaultProviderFilters, maximumVisitPrice: 0 }), '');
+assert.equal(filterCount(defaultProviderFilters), 0);
+assert.equal(filterCount({ ...defaultProviderFilters, radiusKm: 15, verifiedOnly: true, maximumVisitPrice: 0 }), 3);
+assert.equal(safeMediaUrl('javascript:alert(1)'), '');
+assert.equal(safeMediaUrl('data:image/png;base64,example'), '');
+assert.equal(safeMediaUrl('http://example.com/qr.png'), '');
+assert.equal(safeMediaUrl('https://example.com/qr.png'), 'https://example.com/qr.png');
+assert.match(formatCurrency(150.5), /150\.50/);
+console.log('Estimate, filter, QR URL and peso precision checks passed.');
+

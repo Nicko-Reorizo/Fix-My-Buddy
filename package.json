@@ -4,13 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "postinstall": "npm --prefix Frontend/customer-side ci --no-audit --no-fund",
-    "setup": "npm --prefix Frontend/customer-side ci --no-audit --no-fund",
-    "dev": "npm --prefix Frontend/customer-side run dev",
-    "build": "npm --prefix Frontend/customer-side run build",
-    "preview": "npm --prefix Frontend/customer-side run preview",
-    "test": "npm --prefix Frontend/customer-side test",
-    "lint": "npm --prefix Frontend/customer-side run lint",
-    "test:browser": "npm --prefix Frontend/customer-side run test:browser"
+    "postinstall": "npm --prefix Frontend ci --no-audit --no-fund",
+    "setup": "npm --prefix Frontend ci --no-audit --no-fund",
+    "dev": "npm --prefix Frontend run dev",
+    "build": "npm --prefix Frontend run build",
+    "preview": "npm --prefix Frontend run preview",
+    "test": "npm --prefix Frontend test",
+    "lint": "npm --prefix Frontend run lint",
+    "test:browser": "npm --prefix Frontend run test:browser"
   }
 }

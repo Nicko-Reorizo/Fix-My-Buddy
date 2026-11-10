@@ -1,0 +1,1 @@
+export { Welcome as Home } from './Welcome';

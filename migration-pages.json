@@ -1,7 +1,7 @@
 [
   {
     "member": 1,
-    "file": "Frontend/customer-side/src/pages/auth/Welcome.jsx",
+    "file": "Frontend/src/pages/Welcome.jsx",
     "label": "Welcome",
     "path": "/demo/welcome",
     "role": "guest",
@@ -12,7 +12,7 @@
   },
   {
     "member": 1,
-    "file": "Frontend/customer-side/src/pages/auth/SignUp.jsx",
+    "file": "Frontend/src/pages/SignUp.jsx",
     "label": "SignUp",
     "path": "/signup",
     "role": "guest",
@@ -22,7 +22,7 @@
   },
   {
     "member": 1,
-    "file": "Frontend/customer-side/src/pages/auth/SignIn.jsx",
+    "file": "Frontend/src/pages/SignIn.jsx",
     "label": "SignIn",
     "path": "/signin",
     "role": "guest",
@@ -32,7 +32,7 @@
   },
   {
     "member": 1,
-    "file": "Frontend/customer-side/src/pages/auth/ForgotPassword.jsx",
+    "file": "Frontend/src/pages/ForgotPassword.jsx",
     "label": "ForgotPassword",
     "path": "/forgot-password",
     "role": "guest",
@@ -42,7 +42,7 @@
   },
   {
     "member": 1,
-    "file": "Frontend/customer-side/src/pages/auth/Permissions.jsx",
+    "file": "Frontend/src/pages/customer/Permissions.jsx",
     "label": "Permissions",
     "path": "/permissions",
     "role": "guest",
@@ -52,7 +52,7 @@
   },
   {
     "member": 1,
-    "file": "Frontend/customer-side/src/pages/auth/SafetyProfile.jsx",
+    "file": "Frontend/src/pages/customer/SafetyProfile.jsx",
     "label": "SafetyProfile",
     "path": "/profile",
     "role": "guest",
@@ -62,7 +62,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/RequestAssistance.jsx",
+    "file": "Frontend/src/pages/customer/RequestAssistance.jsx",
     "label": "RequestAssistance",
     "path": "/request",
     "role": "customer",
@@ -72,7 +72,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/RequestDetails.jsx",
+    "file": "Frontend/src/pages/customer/RequestDetails.jsx",
     "label": "RequestDetails",
     "path": "/request/details",
     "role": "customer",
@@ -82,7 +82,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/RequestMatching.jsx",
+    "file": "Frontend/src/pages/customer/RequestMatching.jsx",
     "label": "RequestMatching",
     "path": "/request/matching",
     "role": "customer",
@@ -92,7 +92,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/TowingRequest.jsx",
+    "file": "Frontend/src/pages/customer/TowingRequest.jsx",
     "label": "TowingRequest",
     "path": "/request/towing",
     "role": "customer",
@@ -102,7 +102,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/PickupLocation.jsx",
+    "file": "Frontend/src/pages/customer/PickupLocation.jsx",
     "label": "PickupLocation",
     "path": "/location",
     "role": "customer",
@@ -112,7 +112,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/ConfirmLocation.jsx",
+    "file": "Frontend/src/pages/customer/ConfirmLocation.jsx",
     "label": "ConfirmLocation",
     "path": "/confirm-location",
     "role": "customer",
@@ -122,7 +122,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/Providers.jsx",
+    "file": "Frontend/src/pages/customer/Providers.jsx",
     "label": "Providers",
     "path": "/providers",
     "role": "customer",
@@ -132,7 +132,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/ProviderFilters.jsx",
+    "file": "Frontend/src/pages/customer/ProviderFilters.jsx",
     "label": "ProviderFilters",
     "path": "/provider-filters",
     "role": "customer",
@@ -142,7 +142,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/ProviderProfile.jsx",
+    "file": "Frontend/src/pages/customer/ProviderProfile.jsx",
     "label": "ProviderProfile",
     "path": "/providers/demo-provider",
     "role": "customer",
@@ -152,7 +152,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/NoProviders.jsx",
+    "file": "Frontend/src/pages/customer/NoProviders.jsx",
     "label": "NoProviders",
     "path": "/demo/no-providers",
     "role": "customer",
@@ -162,7 +162,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/ConfirmRequest.jsx",
+    "file": "Frontend/src/pages/customer/ConfirmRequest.jsx",
     "label": "ConfirmRequest",
     "path": "/confirm-request",
     "role": "customer",
@@ -172,7 +172,7 @@
   },
   {
     "member": 2,
-    "file": "Frontend/customer-side/src/pages/Services.jsx",
+    "file": "Frontend/src/pages/customer/Services.jsx",
     "label": "Services",
     "path": "/demo/services",
     "role": "customer",
@@ -182,7 +182,7 @@
   },
   {
     "member": 3,
-    "file": "Frontend/customer-side/src/pages/ActiveService.jsx",
+    "file": "Frontend/src/pages/customer/ActiveService.jsx",
     "label": "ActiveService",
     "path": "/bookings/demo-active/service",
     "role": "customer",
@@ -192,7 +192,7 @@
   },
   {
     "member": 3,
-    "file": "Frontend/customer-side/src/pages/History.jsx",
+    "file": "Frontend/src/pages/customer/History.jsx",
     "label": "History",
     "path": "/history",
     "role": "customer",
@@ -202,7 +202,7 @@
   },
   {
     "member": 3,
-    "file": "Frontend/customer-side/src/pages/ProviderChat.jsx",
+    "file": "Frontend/src/pages/customer/ProviderChat.jsx",
     "label": "ProviderChat",
     "path": "/bookings/demo-active/provider-chat",
     "role": "customer",
@@ -212,7 +212,7 @@
   },
   {
     "member": 3,
-    "file": "Frontend/customer-side/src/pages/TowingChat.jsx",
+    "file": "Frontend/src/pages/customer/TowingChat.jsx",
     "label": "TowingChat",
     "path": "/bookings/demo-towing/towing-chat",
     "role": "customer",
@@ -222,7 +222,7 @@
   },
   {
     "member": 3,
-    "file": "Frontend/customer-side/src/pages/PaymentCheckout.jsx",
+    "file": "Frontend/src/pages/customer/PaymentCheckout.jsx",
     "label": "PaymentCheckout",
     "path": "/bookings/demo-active/pay",
     "role": "customer",
@@ -232,7 +232,7 @@
   },
   {
     "member": 3,
-    "file": "Frontend/customer-side/src/pages/Updates.jsx",
+    "file": "Frontend/src/pages/customer/Updates.jsx",
     "label": "Updates",
     "path": "/updates",
     "role": "customer",
@@ -242,7 +242,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Welcome.jsx",
+    "file": "Frontend/src/pages/mechanic/Welcome.jsx",
     "label": "Welcome",
     "path": "/mechanic",
     "role": "mechanic",
@@ -252,7 +252,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/SignIn.jsx",
+    "file": "Frontend/src/pages/mechanic/SignIn.jsx",
     "label": "SignIn",
     "path": "/mechanic/signin",
     "role": "mechanic",
@@ -262,7 +262,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Availability.jsx",
+    "file": "Frontend/src/pages/mechanic/Availability.jsx",
     "label": "Availability",
     "path": "/mechanic/availability",
     "role": "mechanic",
@@ -272,7 +272,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Jobs.jsx",
+    "file": "Frontend/src/pages/mechanic/Jobs.jsx",
     "label": "Jobs",
     "path": "/mechanic/jobs",
     "role": "mechanic",
@@ -282,7 +282,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/JobOffer.jsx",
+    "file": "Frontend/src/pages/mechanic/JobOffer.jsx",
     "label": "JobOffer",
     "path": "/mechanic/jobs/demo-pending",
     "role": "mechanic",
@@ -292,7 +292,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/JobTravel.jsx",
+    "file": "Frontend/src/pages/mechanic/JobTravel.jsx",
     "label": "JobTravel",
     "path": "/mechanic/jobs/demo-active/travel",
     "role": "mechanic",
@@ -302,7 +302,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/VerifyArrival.jsx",
+    "file": "Frontend/src/pages/mechanic/VerifyArrival.jsx",
     "label": "VerifyArrival",
     "path": "/mechanic/jobs/demo-active/arrival",
     "role": "mechanic",
@@ -312,7 +312,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Diagnosis.jsx",
+    "file": "Frontend/src/pages/mechanic/Diagnosis.jsx",
     "label": "Diagnosis",
     "path": "/mechanic/jobs/demo-repair/diagnosis",
     "role": "mechanic",
@@ -322,7 +322,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Quote.jsx",
+    "file": "Frontend/src/pages/mechanic/Quote.jsx",
     "label": "Quote",
     "path": "/mechanic/jobs/demo-repair/quote",
     "role": "mechanic",
@@ -332,7 +332,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/AdditionalWork.jsx",
+    "file": "Frontend/src/pages/mechanic/AdditionalWork.jsx",
     "label": "AdditionalWork",
     "path": "/mechanic/jobs/demo-repair/additional-work",
     "role": "mechanic",
@@ -342,7 +342,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/RepairProgress.jsx",
+    "file": "Frontend/src/pages/mechanic/RepairProgress.jsx",
     "label": "RepairProgress",
     "path": "/mechanic/jobs/demo-repair/progress",
     "role": "mechanic",
@@ -352,7 +352,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/TowingHandover.jsx",
+    "file": "Frontend/src/pages/mechanic/TowingHandover.jsx",
     "label": "TowingHandover",
     "path": "/mechanic/jobs/demo-towing/handover",
     "role": "mechanic",
@@ -362,7 +362,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/JobComplete.jsx",
+    "file": "Frontend/src/pages/mechanic/JobComplete.jsx",
     "label": "JobComplete",
     "path": "/mechanic/jobs/demo-completed/complete",
     "role": "mechanic",
@@ -372,7 +372,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Earnings.jsx",
+    "file": "Frontend/src/pages/mechanic/Earnings.jsx",
     "label": "Earnings",
     "path": "/mechanic/earnings",
     "role": "mechanic",
@@ -382,7 +382,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Updates.jsx",
+    "file": "Frontend/src/pages/mechanic/Updates.jsx",
     "label": "Updates",
     "path": "/mechanic/updates",
     "role": "mechanic",
@@ -392,7 +392,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/Account.jsx",
+    "file": "Frontend/src/pages/mechanic/Account.jsx",
     "label": "Account",
     "path": "/mechanic/account",
     "role": "mechanic",
@@ -402,7 +402,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/LiveWorkspace.jsx",
+    "file": "Frontend/src/pages/mechanic/LiveWorkspace.jsx",
     "label": "LiveWorkspace",
     "path": "/mechanic/jobs",
     "role": "mechanic",
@@ -416,7 +416,7 @@
   },
   {
     "member": 4,
-    "file": "Frontend/src/mechanic/pages/MechanicChat.jsx",
+    "file": "Frontend/src/pages/mechanic/MechanicChat.jsx",
     "label": "MechanicChat",
     "path": "/mechanic/jobs/demo-active/chat",
     "role": "mechanic",
@@ -426,7 +426,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/Home.jsx",
+    "file": "Frontend/src/pages/Home.jsx",
     "label": "Home",
     "path": "/",
     "role": "customer",
@@ -436,7 +436,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/AppHome.jsx",
+    "file": "Frontend/src/pages/customer/AppHome.jsx",
     "label": "AppHome",
     "path": "/app",
     "role": "customer",
@@ -446,7 +446,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/Account.jsx",
+    "file": "Frontend/src/pages/customer/Account.jsx",
     "label": "Account",
     "path": "/account",
     "role": "customer",
@@ -456,7 +456,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/AccountProfile.jsx",
+    "file": "Frontend/src/pages/customer/AccountProfile.jsx",
     "label": "AccountProfile",
     "path": "/account/personal",
     "role": "customer",
@@ -466,7 +466,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/AccountSettings.jsx",
+    "file": "Frontend/src/pages/customer/AccountSettings.jsx",
     "label": "AccountSettings",
     "path": "/settings/appearance",
     "role": "customer",
@@ -476,7 +476,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/Vehicles.jsx",
+    "file": "Frontend/src/pages/customer/Vehicles.jsx",
     "label": "Vehicles",
     "path": "/vehicles",
     "role": "customer",
@@ -486,7 +486,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/HelpCenter.jsx",
+    "file": "Frontend/src/pages/customer/HelpCenter.jsx",
     "label": "HelpCenter",
     "path": "/help",
     "role": "customer",
@@ -496,7 +496,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/SupportChat.jsx",
+    "file": "Frontend/src/pages/customer/SupportChat.jsx",
     "label": "SupportChat",
     "path": "/help/chat",
     "role": "customer",
@@ -506,7 +506,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/Disputes.jsx",
+    "file": "Frontend/src/pages/customer/Disputes.jsx",
     "label": "Disputes",
     "path": "/help/disputes",
     "role": "customer",
@@ -516,7 +516,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/PolicyPage.jsx",
+    "file": "Frontend/src/pages/PolicyPage.jsx",
     "label": "PolicyPage",
     "path": "/terms",
     "role": "customer",
@@ -526,7 +526,7 @@
   },
   {
     "member": 5,
-    "file": "Frontend/customer-side/src/pages/NotFound.jsx",
+    "file": "Frontend/src/pages/NotFound.jsx",
     "label": "NotFound",
     "path": "/demo-page-not-found",
     "role": "customer",

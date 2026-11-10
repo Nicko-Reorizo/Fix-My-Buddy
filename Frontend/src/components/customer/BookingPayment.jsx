@@ -84,7 +84,7 @@ export function QrPhMatrixSvg({ payload = 'FIXMYBUDDY-QRPH', amountDue = 0 }) {
         width="188"
         height="188"
         role="img"
-        aria-label="QRPh Payment Code"
+        aria-label="Illustrative demo QR pattern, not a payment code"
       >
         <rect width={size + 4} height={size + 4} fill="#ffffff" rx="1.5" />
         {cells}
@@ -106,7 +106,7 @@ export function QrPhMatrixSvg({ payload = 'FIXMYBUDDY-QRPH', amountDue = 0 }) {
         </strong>
       )}
       <span className="mt-0.5 text-[11px] font-semibold text-slate-500">
-        InstaPay / PESONet National QR Standard
+        DEMO ONLY · Not scannable for payment
       </span>
     </div>
   );
@@ -192,7 +192,7 @@ export function BookingPayment({
   async function handleInstantPay(selectedMethod) {
     if (busy || quotePending || handoverPending || payment?.status === 'verified') return;
     if (selectedMethod === 'gcash' && gcashMpin.replace(/\D/g, '').length < 4) {
-      setError('Enter your 4-digit GCash MPIN to authorize payment.');
+      setError('Enter the demo code 0000. Never use a real banking PIN.');
       return;
     }
     setBusy(selectedMethod);
@@ -319,10 +319,10 @@ export function BookingPayment({
           <div className="flex flex-wrap items-center justify-between gap-2">
             <p className="customer-save-status m-0 flex items-center gap-2 font-semibold">
               <ShieldCheck size={20} />
-              {tr('Official payment verified & receipt unlocked')}
+              Demo payment simulated · Sample receipt available
             </p>
             <span className="rounded-full bg-emerald-500/20 px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider text-emerald-300">
-              {String(payment.reference || '').startsWith('QRPH') ? 'QRPh Verified' : 'GCash Verified'}
+              Demo only
             </span>
           </div>
           <div className="mt-3 grid gap-1.5 border-t border-emerald-500/20 pt-3 text-sm text-[rgb(var(--fmb-muted))]">
@@ -347,7 +347,7 @@ export function BookingPayment({
               onClick={handleDownloadReceipt}
             >
               <Download size={17} />
-              {downloadingReceipt ? 'Preparing PDF receipt...' : 'Download official PDF receipt'}
+              {downloadingReceipt ? 'Preparing demo PDF receipt...' : 'Download demo PDF receipt'}
             </button>
           )}
         </div>
@@ -426,7 +426,7 @@ export function BookingPayment({
                 </div>
 
                 <label className="request-field">
-                  GCash mobile number (+63 / 09XX)
+                  Demo mobile number (+63 / 09XX)
                   <input
                     type="tel"
                     inputMode="tel"
@@ -467,7 +467,7 @@ export function BookingPayment({
                   </button>
                   <span className="flex items-center gap-1 text-xs font-bold text-[#6da2ff]">
                     <Lock size={14} />
-                    GCash Secure MPIN
+                    Demo checkout code · Not a real GCash login
                   </span>
                 </div>
 
@@ -491,7 +491,7 @@ export function BookingPayment({
                 </div>
 
                 <label className="request-field">
-                  Enter 4-digit GCash MPIN
+                  Enter demo code 0000 · Never enter a real MPIN
                   <input
                     type="password"
                     inputMode="numeric"
@@ -558,7 +558,7 @@ export function BookingPayment({
               </div>
 
               <p className="auth-hint m-0 text-center">
-                {tr('Scan with GCash, Maya, BPI, BDO, UnionBank, or any QRPh-enabled app.')}
+                Demo QR illustration only. Do not scan or send money.
               </p>
 
               <label className="request-field">

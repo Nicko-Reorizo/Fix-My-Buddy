@@ -55,7 +55,7 @@ function CustomerStore({ owner, user, children }) {
       .vehicles()
       .then((vehicles) => {
         if (active) {
-          setGarage((current) => ({ ...current, vehicles }));
+          setGarage((current) => ({ ...current, vehicles, selectedId: vehicles.some(item => item.id === current.selectedId) ? current.selectedId : vehicles[0]?.id || '' }));
           setVehicleStatus('ready');
         }
       })

@@ -326,6 +326,13 @@
   .provider-text-link { @apply inline-flex min-h-11 items-center justify-center text-base font-semibold text-[rgb(var(--fmb-accent))]; }
   .provider-loading { @apply flex flex-col items-center gap-4 py-6 text-base text-[rgb(var(--fmb-muted))]; }
   .provider-loading > svg { @apply text-[rgb(var(--fmb-accent))]; }
+  .provider-loading-screen { @apply my-2 min-h-[52vh] justify-center rounded-xl border border-[rgb(var(--fmb-border))] bg-[rgb(var(--fmb-panel))] px-5 py-8 text-center; animation: buddy-screen 320ms ease-out both; }
+  .provider-loading-screen h2 { @apply m-0 text-xl font-semibold leading-7 text-[rgb(var(--fmb-text))]; }
+  .provider-loading-screen p { @apply m-0 max-w-sm leading-6; }
+  .provider-loading-icon { @apply grid h-20 w-20 place-items-center rounded-full bg-[rgb(var(--fmb-brand))]/15; }
+  .provider-loading-icon svg { @apply text-[rgb(var(--fmb-accent))]; }
+  .provider-loading-skeletons { @apply flex w-full max-w-md flex-col gap-3; }
+  .provider-loading-skeletons .provider-skeleton { @apply h-20; }
   .provider-skeleton { @apply h-32 w-full rounded-lg; background: linear-gradient(100deg,rgb(var(--fmb-panel)) 25%,rgb(var(--fmb-raised5)) 45%,rgb(var(--fmb-panel)) 65%); background-size: 200% 100%; animation: buddy-shimmer 1.6s ease-in-out infinite; }
   .provider-map { @apply mb-2 h-48 w-full rounded-lg border-0 bg-[rgb(var(--fmb-panel))]; }
   .provider-profile-summary, .provider-estimate { @apply rounded-lg border border-[rgb(var(--fmb-border))] bg-[rgb(var(--fmb-panel))] p-3.5; }

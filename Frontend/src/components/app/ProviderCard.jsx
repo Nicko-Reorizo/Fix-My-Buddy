@@ -16,7 +16,7 @@ export function ProviderCard({
         }).format(price) : tr("Quote pending")}</strong></div>
     {Array.isArray(provider.specialties) && <p className="provider-specialties">{provider.specialties.join(' Â· ')}</p>}
     {onClick && <span className="provider-card-open">{tr("View profile")}<ChevronRight size={15} /></span>}
-    {provider.mapUnavailable && <p className="auth-hint"><MapPin size={14} />{tr("Map coordinates unavailable")}</p>}
+    {provider.mapUnavailable && <p className="auth-hint"><MapPin size={14} />{tr("Map preview unavailable")}</p>}
   </>;
   return onClick ? <button type="button" className={`provider-card ${selected ? 'is-selected' : ''}`} onClick={onClick}>{content}</button> : <div className="provider-card">{content}</div>;
 }

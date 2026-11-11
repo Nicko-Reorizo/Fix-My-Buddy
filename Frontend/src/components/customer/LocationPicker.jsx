@@ -100,7 +100,6 @@ export function LocationPicker({ onClose }) {
     <form onSubmit={confirm} className="location-picker-panel">
       <p role="status">{finding ? t('Finding address...','Hinahanap ang address...') : t('Move the map beneath the pin. Check the address before confirming.','Igalaw ang mapa sa ilalim ng pin. Suriin ang address bago kumpirmahin.')}</p>
       <label>{t('Pickup address','Pickup address')}<input value={address} required minLength={5} maxLength={300} autoComplete="street-address" onChange={event => { cancelLocation(); clearTimeout(moveTimer.current); revision.current += 1; setAddress(event.target.value); setFinding(false); setMessage(''); }} /></label>
-      {pin && <small>{pin.latitude.toFixed(6)}, {pin.longitude.toFixed(6)}{Number.isFinite(pin.accuracy) ? ` · ±${Math.round(pin.accuracy)} m` : ''}</small>}
       <label>{t('Landmark / instructions (optional)','Palatandaan / tagubilin (opsyonal)')}<input value={landmark} maxLength={500} onChange={event => setLandmark(event.target.value)} /></label>
       {(message || error) && <p role="alert">{message || error}</p>}
       {message && pin && <button type="button" className="auth-secondary" onClick={() => select.current(pin)}>{t('Try address lookup again','Subukang hanapin muli ang address')}</button>}

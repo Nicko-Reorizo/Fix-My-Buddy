@@ -54,7 +54,7 @@ export function TowingRequest() {
       }} /></label>
       <button className="auth-secondary" type="button" onClick={locate} disabled={gpsStatus === 'loading'}><LocateFixed size={22} />{gpsStatus === 'loading' ? t('Locating...','Kinukuha ang lokasyon...') : t('Use my current location','Gamitin ang kasalukuyang lokasyon')}</button>
       {gpsError && <p className="auth-error" role="alert">{tr(gpsError)}</p>}
-      {hasPosition && <p className="auth-hint">{location.latitude.toFixed(6)}, {location.longitude.toFixed(6)}{Number.isFinite(location.accuracy) && <> Â· {t('GPS accuracy','Katumpakan ng GPS')}: Â±{Math.round(location.accuracy)} m</>}</p>}
+
       {hasPosition ? <PickupPreview compact onLocate={locate} locating={gpsStatus === 'loading'} /> : <div className="towing-map-empty"><MapPin size={26} /><p>{t('Use GPS to show a pickup map, or continue with your full pickup address.','Gamitin ang GPS para makita ang mapa, o magpatuloy gamit ang buong pickup address.')}</p></div>}
       <fieldset className="settings-languages towing-destination-mode"><legend>{t('Choose your destination','Piliin ang iyong destinasyon')}</legend>{[
         ['manual', t('Enter an address or repair shop','Maglagay ng address o talyer')],

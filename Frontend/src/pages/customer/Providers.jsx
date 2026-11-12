@@ -43,7 +43,6 @@ export function Providers() {
     let resultTimer;
     setSearchProviders([]);
     setStatus('loading');
-    setSearchProviders([]);
     setError('');
     searchProviders({
       ...request,
@@ -51,40 +50,27 @@ export function Providers() {
       filters: providerFilters
     }, controller.signal).then(async data => {
       if (controller.signal.aborted) return;
-      setSearchProviders(data.providers);
-      setStatus('ready');
-      const retained = data.providers.some(provider => provider.id === selection.current);
-      if (!retained) setSelectedProviderId('');
-      setAutoFallback(request.matchingMode === 'auto' && !data.recommendedProviderId);
       const recommended = automaticProvider(data, request.matchingMode, selection.current);
-      if (recommended) {
-        const fresh = await getProvider(recommended.id, { request, location }, controller.signal);
+      const fresh = recommended
+        ? await getProvider(recommended.id, { request, location }, controller.signal)
+        : null;
+      if (controller.signal.aborted) return;
+      const remaining = Math.max(0, 900 - (Date.now() - searchStartedAt));
+      resultTimer = window.setTimeout(() => {
         if (controller.signal.aborted) return;
-        setSearchProviders(current => [...current.filter(item => item.id !== fresh.id), fresh]);
-        setSelectedProviderId(fresh.id);
-        navigate('/confirm-request', {
-          replace: true
-        });
-      }
-    }).catch(problem => {
-    }, controller.signal).then(data => {
-      const showResults = () => {
-        if (controller.signal.aborted) return;
-        setSearchProviders(data.providers);
+        setSearchProviders(fresh
+          ? [...data.providers.filter(item => item.id !== fresh.id), fresh]
+          : data.providers);
         setStatus('ready');
         const retained = data.providers.some(provider => provider.id === selection.current);
         if (!retained) setSelectedProviderId('');
         setAutoFallback(request.matchingMode === 'auto' && !data.recommendedProviderId);
-        const recommended = automaticProvider(data, request.matchingMode, selection.current);
-        if (recommended) {
-          setSelectedProviderId(recommended.id);
-          navigate('/providers/' + encodeURIComponent(recommended.id), {
-            replace: true
-          });
+        if (fresh) {
+          setSelectedProviderId(fresh.id);
+          navigate('/confirm-request', { replace: true });
         }
-      };
-      const remaining = Math.max(0, 900 - (Date.now() - searchStartedAt));
-      resultTimer = window.setTimeout(showResults, remaining);    }).catch(problem => {
+      }, remaining);
+    }).catch(problem => {
       if (!controller.signal.aborted) {
         setError(problem.message);
         setStatus('error');
@@ -102,8 +88,7 @@ export function Providers() {
   function schedule() {
     navigate('/provider-filters?schedule=1');
   }
-  return <RequestFrame title={tr("Your nearby buddies")} subtitle={status === 'ready' ? trTemplate(["", " available \xB7 ", " assistance"], [providers.length, request.issueType]) : tr("Find the right help around your pickup.")} backTo={request.serviceType === 'towing' ? '/request/towing' : '/request'}>
-  if (status === 'loading') return <RequestFrame title={tr("Searching for providers")} subtitle={tr("This can take a moment while we check who is available.")} backTo="/request/matching">
+  if (status === 'loading') return <RequestFrame title={tr("Searching for providers")} subtitle={tr("This can take a moment while we check who is available.")} backTo={request.serviceType === 'towing' ? '/request/towing' : '/request'}>
     <section className="provider-loading provider-loading-screen" role="status" aria-live="polite" aria-busy="true">
       <span className="provider-loading-icon"><LoaderCircle size={42} className="auth-spin" aria-hidden="true" /></span>
       <h2>{tr("Looking for available buddies")}</h2>
@@ -113,7 +98,8 @@ export function Providers() {
         <div className="provider-skeleton" />
       </div>
     </section>
-  </RequestFrame>;  return <RequestFrame title={tr("Your nearby buddies")} subtitle={status === 'ready' ? trTemplate(["", " available \xB7 ", " assistance"], [providers.length, request.issueType]) : tr("Find the right help around your pickup.")} backTo="/request/matching">
+  </RequestFrame>;
+  return <RequestFrame title={tr("Your nearby buddies")} subtitle={status === 'ready' ? trTemplate(["", " available \xB7 ", " assistance"], [providers.length, request.issueType]) : tr("Find the right help around your pickup.")} backTo={request.serviceType === 'towing' ? '/request/towing' : '/request'}>
     <div className="request-form">
       <div className="provider-tools">
         <Link className="provider-chip" to="/provider-filters"><ListFilter size={15} />{tr("Filters")} {filterCount(providerFilters) ? trTemplate([" \xB7 ", ""], [filterCount(providerFilters)]) : ''}</Link>

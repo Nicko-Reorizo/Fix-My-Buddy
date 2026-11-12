@@ -94,8 +94,15 @@
 
 
 @layer components {
-  .towing-condition { @apply gap-4; }
-  .towing-condition legend { @apply mb-3 text-base font-semibold; }
+  .towing-condition { @apply gap-5; }
+  .towing-condition > legend { @apply mb-3 text-base font-semibold; }
+  .towing-question { @apply m-0 flex min-w-0 flex-col gap-2 border-0 p-0; }
+  .towing-question > legend { @apply mb-2 p-0 text-base font-medium; }
+  .towing-destination-mode > legend { @apply font-semibold; }
+  .towing-choice { @apply grid grid-cols-3 gap-2; }
+  .towing-mode-switch { @apply grid grid-cols-2 gap-2; }
+  .towing-choice .provider-chip, .towing-mode-switch .provider-chip { @apply w-full rounded-lg; }
+  .towing-mode-switch .provider-chip { @apply min-h-[4.5rem] flex-col text-center; }
   .towing-route, .towing-journey { @apply my-4 flex min-w-0 flex-col gap-4 border-y border-[rgb(var(--fmb-border))] py-4; animation: buddy-screen 350ms ease-out both; }
   .towing-route h2, .towing-journey h2 { @apply m-0 flex items-center gap-2 text-base font-semibold leading-6; }
   .towing-journey h3 { @apply m-0 text-base font-semibold; }

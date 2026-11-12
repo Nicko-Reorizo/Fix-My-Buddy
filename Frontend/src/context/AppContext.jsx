@@ -25,7 +25,7 @@ const defaultRequest = {
   destinationShop: null,
   towingCondition: {},
   landmark: '',
-  matchingMode: 'manual',
+  matchingMode: 'auto',
   searchRadiusKm: 5,
   vehicleId: '',
   scheduledAt: null,
@@ -45,7 +45,7 @@ function readStoredState() {
 export function AppProvider({ children }) {
   const storedState = readStoredState();
   const [request, setRequest] = useState(
-    { ...defaultRequest, ...storedState?.request, photoName: '' },
+    { ...defaultRequest, ...storedState?.request, bookingRequestId: storedState?.request?.bookingRequestId || crypto.randomUUID(), photoName: '' },
   );
   const [location, setLocation] = useState(
     storedState?.location || defaultLocation,
@@ -79,7 +79,7 @@ export function AppProvider({ children }) {
   }, []);
 
   const resetRequest = useCallback((serviceType = 'mechanic') => {
-    setRequest({ ...defaultRequest, serviceType });
+    setRequest({ ...defaultRequest, serviceType, bookingRequestId: crypto.randomUUID() });
     setSelectedProviderId('');
     setAttachments([]);
     setSearchProviders([]);

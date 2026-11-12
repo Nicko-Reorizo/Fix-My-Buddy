@@ -20,7 +20,7 @@ export function DemoToolbar() {
     else acceptUser(demoApi.selectRole(page.role));
     const towing = page.label === 'TowingRequest';
     const request = { serviceType: towing ? 'towing' : 'mechanic', vehicleId: 'demo-vehicle', issueType: towing ? 'Breakdown' : 'Battery', notes: 'Frontend presentation sample', landmark: 'Demo pickup', destination: 'Demo repair shop, Naga City', destinationMode: 'manual', towingCondition: { starts: 'unknown', rolls: 'yes', collision: 'no' }, matchingMode: 'manual', scheduledAt: null };
-    app.updateRequest(request); app.setLocation(sampleLocation);
+    app.updateRequest({ ...request, bookingRequestId: crypto.randomUUID() }); app.setLocation(sampleLocation);
     app.setSearchProviders([demoApi.provider({ request, location: sampleLocation })]);
     app.setSelectedProviderId('demo-provider');
     setMessage(''); setOpen(false); refreshData(); navigate(page.path);
@@ -39,7 +39,7 @@ export function DemoToolbar() {
         <button type="button" onClick={() => visit({ role: 'mechanic', path: '/mechanic/jobs' })}>Mechanic demo</button>
         <button type="button" onClick={reset}>Reset demo data</button>
       </div>
-      <p>Demo arrival/handover PIN: <strong>1234</strong>. Payment demo code: <strong>0000</strong>. Never enter a real banking PIN or password.</p>
+      <p>Show the arrival PIN on the customer service screen after provider acceptance. Handover demo PIN: <strong>1234</strong>. Payment demo code: <strong>0000</strong>. Never enter a real banking PIN or password.</p>
       {message && <p role="status">{message}</p>}
       {[1, 2, 3, 4, 5].map(member => <details key={member}><summary>Member {member} · {demoPages.filter(page => page.member === member).length} page files</summary><div className="demo-page-list">{demoPages.filter(page => page.member === member).map(page => <button key={page.file} type="button" onClick={() => visit(page)}>{page.label}<small>{page.path}</small></button>)}</div></details>)}
       <div className="demo-actions">

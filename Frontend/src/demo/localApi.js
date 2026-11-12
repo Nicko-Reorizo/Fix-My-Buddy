@@ -1,4 +1,8 @@
 import { STORE_KEY, SESSION_KEY, REQUEST_KEY, demoUsers, initialState, createBooking, estimate, policy, sampleLocation } from './fixtures.js';
+import { validateRequestDraft } from '../utils/requestDraft.js';
+import { validEstimate } from '../utils/bookingValidation.js';
+import { validateTowingDestination } from '../utils/towingDestination.js';
+import { validTowingCondition } from '../utils/towingValidation.js';
 import { normalizeVehicle, validateVehicle, validateCustomerSetup } from '../utils/vehicleValidation.js';
 import { normalizePhone } from '../utils/authValidation.js';
 
@@ -98,6 +102,14 @@ export function createDemoApi(storage, sessionStorage) {
     }
     if (path === '/auth/password/forgot') return { ok: true, demo: true };
     if (path === '/support/config') return { phone: '', email: '' };
+    // These are local demo access checks, not production authentication.
+    const currentUser = user();
+    const customerPath = path.startsWith('/customers/') || path.startsWith('/providers/') || path.startsWith('/repair-shops/');
+    const mechanicPath = path.startsWith('/mechanics/me');
+    if (customerPath || mechanicPath) {
+      if (!currentUser) throw error('Sign in before requesting or managing assistance.', 401);
+      if (currentUser.role !== (mechanicPath ? 'mechanic' : 'customer')) throw error('Use the matching customer or provider account.', 403);
+    }
     if (path === '/providers/search' || /^\/providers\/[^/]+\/quote$/.test(path)) {
       const item = provider(state, body);
       if (path.endsWith('/quote')) return { provider: item };
@@ -141,12 +153,31 @@ export function createDemoApi(storage, sessionStorage) {
       return finish({ [key === 'vehicles' ? 'vehicle' : 'reminder']: item });
     }
     if (path === '/customers/me/bookings') {
-      if (method === 'GET') return finish({ bookings: state.bookings });
+      if (method === 'GET') return finish({ bookings: state.bookings.filter(item => item.customerId === currentUser.id) });
+      if (method !== 'POST') throw error('Unsupported booking action.', 405);
+      if (typeof body.bookingRequestId !== 'string' || body.bookingRequestId.length < 8 || body.bookingRequestId.length > 100) throw error('Start a new request before confirming.');
+      const fingerprint = JSON.stringify(body);
+      state.bookingRequests ||= {};
+      const requestKey = `${currentUser.id}:${body.bookingRequestId}`;
+      const previous = state.bookingRequests[requestKey];
+      if (previous) {
+        if (previous.fingerprint !== fingerprint) throw error('This confirmation was already used. Start a new request.', 409);
+        return finish({ booking: state.bookings.find(item => item.id === previous.bookingId) });
+      }
+      const problem = validateRequestDraft(body, body.location);
+      if (problem) throw error(problem);
+      if (!state.vehicles.some(item => item.id === body.vehicleId)) throw error('Choose an available vehicle.');
+      const quoted = provider(state, body);
+      if (!state.mechanic.online || body.providerId !== quoted.id) throw error('This provider is unavailable. Find help again.', 409);
+      if (!validEstimate(quoted.estimate) || body.estimateId !== quoted.estimate.id || body.estimateVersion !== quoted.estimate.version || body.cancellationPolicyId !== policy.id) throw error('Review the current estimate and cancellation terms.', 409);
+      if (body.serviceType === 'towing' && (validateTowingDestination(body, body.location) || !validTowingCondition(body.towingCondition) || body.towingRouteId !== quoted.towingQuote?.routeId || body.towingRouteVersion !== quoted.towingQuote?.version)) throw error('Confirm the towing destination, vehicle condition and route.');
       const b = createBooking(id('demo-booking'), 'requested', body.serviceType || 'mechanic');
-      Object.assign(b, { customerId: user()?.id || demoUsers.customer.id, vehicleId: body.vehicleId, pickup: body.location || sampleLocation, issueType: body.issueType, notes: body.notes || '', scheduledAt: body.scheduledAt || null });
+      Object.assign(b, { customerId: currentUser.id, vehicleId: body.vehicleId, pickup: body.location, issueType: body.issueType, notes: body.notes || '', scheduledAt: body.scheduledAt || null, initialEstimate: quoted.estimate, quotedAmount: quoted.estimate.total });
       b.vehicleLabel = state.vehicles.find(item => item.id === b.vehicleId)?.model || b.vehicleLabel;
-      if (b.towing) b.towing.destinationAddress = body.destination || b.towing.destinationAddress;
-      state.bookings.unshift(b); return finish({ booking: b });
+      if (b.towing) Object.assign(b.towing, { destinationAddress: body.destination, status: 'requested', canConfirmHandover: false, etaMinutes: 8 });
+      state.bookings.unshift(b);
+      state.bookingRequests[requestKey] = { fingerprint, bookingId: b.id };
+      return finish({ booking: b });
     }
     if (/^\/customers\/me\/updates/.test(path)) {
       if (method === 'GET') return finish({ updates: state.updates });
@@ -179,7 +210,7 @@ export function createDemoApi(storage, sessionStorage) {
     }
     if (path === '/mechanics/me/jobs') {
       const status = url.searchParams.get('status');
-      return finish({ jobs: state.bookings.filter(b => !status || b.status === status).map(b => job(b, state)) });
+      return finish({ jobs: state.bookings.filter(b => b.providerId === state.mechanic.id && currentUser.id === demoUsers.mechanic.id && (!status || b.status === status)).map(b => job(b, state)) });
     }
     const match = path.match(/^\/(customers\/me\/bookings|mechanics\/me\/jobs)\/([^/]+)(?:\/(.*))?$/);
     if (match) {
@@ -187,6 +218,12 @@ export function createDemoApi(storage, sessionStorage) {
       const b = state.bookings.find(item => item.id === bookingId);
       if (!b) throw error('This demo booking was not found. Reset demo data to restore the examples.', 404);
       const fromMechanic = area.startsWith('mechanics');
+      if (fromMechanic ? b.providerId !== state.mechanic.id || currentUser.id !== demoUsers.mechanic.id : b.customerId !== currentUser.id) throw error('This booking belongs to another account.', 403);
+      const customerActions = ['mechanic/arrival-pin', 'review', 'sharing', 'cancel', 'reschedule', 'quote-decision', 'repair-approval', 'towing/handover', 'inspection-request', 'payment/session', 'pay', 'payment', 'payment-confirm'];
+      const mechanicActions = ['accept', 'decline', 'arrival-verification', 'diagnosis', 'quotes', 'additional-work', 'progress', 'location', 'completion', 'handover'];
+      if (action && ((fromMechanic && customerActions.includes(action)) || (!fromMechanic && mechanicActions.includes(action)))) throw error('This action requires the other participant.', 403);
+      if ([...customerActions.filter(item => item !== 'mechanic/arrival-pin'), ...mechanicActions].includes(action) && method === 'GET') throw error('Confirmation is required for this action.', 405);
+      if (['diagnosis', 'quotes', 'additional-work', 'progress', 'completion', 'handover'].includes(action) && b.status !== 'in_progress') throw error('Verify arrival with the customer before starting service.', 409);
       if (!action) return finish(fromMechanic ? { job: job(b, state) } : { booking: b });
       const channel = action.match(/^(mechanic|towing)\/messages$/);
       if (channel) {
@@ -201,18 +238,35 @@ export function createDemoApi(storage, sessionStorage) {
         if (!message) { message = { id: id('demo-message'), sender, body: body.body, clientId: body.clientId, createdAt: now(), readAt: null }; messages.push(message); }
         return finish({ message });
       }
-      if (action === 'mechanic/arrival-pin') return { bookingId: b.id, pin: '1234', expiresAt: new Date(Date.now() + 3600000).toISOString() };
+      if (action === 'mechanic/arrival-pin') {
+        if (b.status !== 'en_route') throw error('Arrival verification is only available after the provider accepts.', 409);
+        state.arrivalPins ||= {};
+        let verification = state.arrivalPins[b.id];
+        if (!verification || Date.parse(verification.expiresAt) <= Date.now()) {
+          const random = new Uint32Array(1); globalThis.crypto.getRandomValues(random);
+          verification = { pin: String(1000 + random[0] % 9000), expiresAt: new Date(Date.now() + 600000).toISOString(), attempts: 0 };
+          state.arrivalPins[b.id] = verification;
+        }
+        return finish({ bookingId: b.id, pin: verification.pin, expiresAt: verification.expiresAt });
+      }
       if (action === 'review') {
         if (b.status !== 'completed' || !Number.isInteger(body.rating) || body.rating < 1 || body.rating > 5) throw error('Rate a completed demo service from 1 to 5.');
         b.review = { ...body, id: b.review?.id || id('demo-review'), bookingId: b.id, version: (b.review?.version || 0) + 1 };
         return finish({ review: b.review });
       }
       if (action === 'sharing') { b.sharing = { enabled: Boolean(body.enabled) }; return finish({ sharing: b.sharing }); }
+      if (action === 'receipt') return finish({ booking: b });
       if (action === 'cancel') b.status = 'cancelled';
       else if (action === 'reschedule') b.scheduledAt = body.scheduledAt;
-      else if (action === 'accept') { b.status = 'en_route'; b.dispatchedAt = now(); b.canCancel = false; b.canReschedule = false; }
+      else if (action === 'accept') { if (b.status !== 'requested') throw error('This request is no longer available.', 409); b.status = 'en_route'; b.mechanic.arrivalPinAvailable = true; b.dispatchedAt = now(); b.canCancel = false; b.canReschedule = false; }
       else if (action === 'decline') b.status = 'rejected';
-      else if (action === 'arrival-verification') { if (body.pin !== '1234') throw error('Use the demo arrival PIN: 1234.'); b.status = 'in_progress'; b.mechanic.arrivalPinAvailable = false; }
+      else if (action === 'arrival-verification') {
+        const verification = state.arrivalPins?.[b.id];
+        if (b.status !== 'en_route' || !verification || Date.parse(verification.expiresAt) <= Date.now()) throw error('Ask the customer to show a current arrival PIN.', 409);
+        if (verification.attempts >= 5) throw error('Too many attempts. Wait for the PIN to expire, then ask the customer for a new one.', 429);
+        if (body.pin !== verification.pin) { verification.attempts++; save(state); throw error('Incorrect arrival PIN. Check with the customer in person.'); }
+        b.status = 'in_progress'; b.mechanic.arrivalPinAvailable = false; delete state.arrivalPins[b.id];
+      }
       else if (action === 'diagnosis') { b.mechanic.diagnosis = { summary: body.findings }; save(state); return { diagnosis: b.mechanic.diagnosis }; }
       else if (action === 'quotes' || action === 'additional-work') {
         const items = body.items?.map(item => ({ label: String(item.label || '').trim(), amount: Number(item.amount) }));
@@ -245,6 +299,7 @@ export function createDemoApi(storage, sessionStorage) {
       else if (action === 'payment-reports') b.payment.status = 'pending_verification';
       else throw error(`Frontend demo action is unavailable: ${action}`, 501);
       b.version++; b.mechanic.status = b.status; b.mechanic.updatedAt = now();
+      if (b.towing && ['accept', 'arrival-verification'].includes(action)) b.towing.status = b.status;
       return finish({ booking: b, job: job(b, state), payment: b.payment });
     }
     throw error(`No local frontend fixture for ${method} ${path}`, 404);
@@ -256,7 +311,7 @@ function browserStorage(name) { try { return globalThis[name]; } catch { return 
 export const demoApi = createDemoApi(browserStorage('localStorage'), browserStorage('sessionStorage'));
 export function initializeDemo() {
   try {
-    if (!localStorage.getItem(REQUEST_KEY)) localStorage.setItem(REQUEST_KEY, JSON.stringify({ location: sampleLocation, request: { serviceType: 'mechanic', issueType: 'Battery', vehicleId: 'demo-vehicle', notes: '', landmark: 'Demo pickup point', matchingMode: 'manual', scheduledAt: null }, selectedProviderId: 'demo-provider' }));
+    if (!localStorage.getItem(REQUEST_KEY)) localStorage.setItem(REQUEST_KEY, JSON.stringify({ location: sampleLocation, request: { serviceType: 'mechanic', issueType: 'Battery', vehicleId: 'demo-vehicle', notes: '', landmark: 'Demo pickup point', matchingMode: 'auto', scheduledAt: null }, selectedProviderId: '' }));
   } catch { /* The demo adapter also works in memory. */ }
 }
 export function demoReceipt(reference) {
@@ -271,9 +326,9 @@ export function demoReceipt(reference) {
 }
 export async function demoFetch(input, options = {}) {
   const path = String(input).replace(/^\/demo-api/, '');
-  if (path.endsWith('/receipt')) return new Response(demoReceipt(path.split('/')[4] || 'DEMO'), { headers: { 'Content-Type': 'application/pdf' } });
   try {
     const result = await demoApi.request(path, options);
+    if (path.endsWith('/receipt')) return new Response(demoReceipt(result.booking.reference), { headers: { 'Content-Type': 'application/pdf' } });
     return result === null ? new Response(null, { status: 204 }) : Response.json(result);
   } catch (failure) {
     if (failure.name === 'AbortError') throw failure;

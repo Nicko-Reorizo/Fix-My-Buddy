@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { RoleGuard } from '../auth/RoleGuard';
 
 export function MainLayout() {
   const { pathname } = useLocation();
@@ -20,10 +21,10 @@ export function MainLayout() {
     window.scrollTo(0, 0);
   }, [pathname]);
   return (
-    <main className="auth-root">
+    <RoleGuard requireSession allowedRoles={['customer']}><main className="auth-root">
       <div className="mx-auto min-h-screen w-full max-w-[488px]">
         <Outlet />
       </div>
-    </main>
+    </main></RoleGuard>
   );
 }

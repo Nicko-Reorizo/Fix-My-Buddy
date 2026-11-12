@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, LocateFixed, MapPin, Flag, Paperclip } from 'lucide-react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { ArrowRight, LocateFixed, MapPin, Flag } from 'lucide-react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { RequestFrame } from '../../components/app/RequestFrame';
 import { RequestVehicle } from '../../components/app/RequestVehicle';
 import { TowingCondition } from '../../components/customer/TowingCondition';
@@ -16,7 +16,7 @@ import { validateSchedule } from '../../utils/vehicleValidation';
 import { tr } from '../../i18n/translations';
 
 export function TowingRequest() {
-  const { request, updateRequest, location, setLocation, attachments } = useApp();
+  const { request, updateRequest, location, setLocation } = useApp();
   const { selectedVehicle, vehicleStatus, vehicleError, refreshData } = useCustomer();
   const { t } = useLocale();
   const { requestLocation, cancelLocation, status: gpsStatus, error: gpsError } = useGeolocation();
@@ -39,8 +39,8 @@ export function TowingRequest() {
     event.preventDefault();
     const problem = validateTowingDestination(request, location) || (request.scheduledAt && validateSchedule(request.scheduledAt));
     if (problem) { setError(problem); return; }
-    updateRequest({ serviceType: 'towing', issueType: request.issueType || 'Towing assistance', vehicleId: selectedVehicle.id, destination: request.destination.trim() });
-    navigate('/request/matching');
+    updateRequest({ serviceType: 'towing', issueType: request.issueType || 'Towing assistance', vehicleId: selectedVehicle.id, destination: request.destination.trim(), matchingMode: 'auto' });
+    navigate('/providers');
   }
   if (vehicleStatus === 'loading') return <RequestFrame title={t('Where are we towing?','Saan natin dadalhin ang sasakyan?')} subtitle={t('Loading your vehicles...','Kinukuha ang mga sasakyan mo...')} />;
   if (vehicleStatus === 'error') return <RequestFrame title={t('Could not load vehicles','Hindi makuha ang mga sasakyan')}><p className="auth-error" role="alert">{vehicleError}</p><button className="auth-secondary" type="button" onClick={refreshData}>{t('Try again','Subukan muli')}</button></RequestFrame>;
@@ -66,7 +66,7 @@ export function TowingRequest() {
         : <RepairShopPicker location={location} vehicleType={selectedVehicle.type} selected={request.destinationShop} onSelect={shop => { updateRequest({ destinationShop: shop, destination: shop.address }); setError(''); }} />}
       <TowingCondition value={request.towingCondition} onChange={value => { updateRequest({ towingCondition: value }); setError(''); }} />
       <details className="towing-more"><summary>{t('Landmark or instructions (optional)','Palatandaan o tagubilin (opsyonal)')}</summary><label className="request-field">{t('Help your driver find you','Tulungan ang driver na mahanap ka')}<textarea rows={3} maxLength={500} value={request.landmark} onChange={event => updateRequest({ landmark: event.target.value })} /></label></details>
-      <Link className="auth-secondary" to="/request/details"><Paperclip size={22} />{t('Add details, photos or videos (optional)','Magdagdag ng detalye, larawan o video (opsyonal)')}{attachments.length > 0 && ` (${attachments.length})`}</Link>
+      <details className="towing-more"><summary>{t('Issue notes (optional)', 'Detalye ng problema (opsyonal)')}</summary><label className="request-field">{t('What happened?', 'Ano ang nangyari?')}<textarea rows={2} maxLength={2000} value={request.notes} onChange={event => updateRequest({ notes: event.target.value })} /></label></details>
       <p className="auth-hint">{t('Distance, arrival time and towing price come from the provider. No booking or payment is made on this page.','Mula sa provider ang distansya, oras ng pagdating at presyo ng towing. Wala pang booking o bayad sa pahinang ito.')}</p>
       {error && <p className="auth-error" role="alert" tabIndex={-1} ref={errorNotice}>{tr(error)}</p>}
       <button type="submit" className="auth-primary request-continue" disabled={gpsStatus === 'loading'}><ArrowRight size={22} />{t('Find towing providers','Maghanap ng towing provider')}</button>

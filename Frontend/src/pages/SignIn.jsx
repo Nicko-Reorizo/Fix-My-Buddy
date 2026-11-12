@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { SignUp } from './SignUp';
 import { AccountLink, AuthField, AuthHeading, AuthNotice, AuthSubmit, LegalLinks, PasswordField } from '../components/auth/AuthControls';
 import { useAuth } from '../context/useAuth';
 import { authService } from '../services/authService';
@@ -14,6 +15,7 @@ export function SignIn({ role = 'customer' }) {
   const { acceptUser } = useAuth();
   const navigate = useNavigate();
   const paths = authPaths(role);
+  const [params] = useSearchParams();
   async function submit(event) {
     event.preventDefault();
     if (busy) return;
@@ -29,6 +31,7 @@ export function SignIn({ role = 'customer' }) {
     } catch (failure) { setError(failure.message); }
     finally { setBusy(false); if (form.elements.password) form.elements.password.value = ''; }
   }
+  if (role === 'customer' && params.get('setup') === '1') return <SignUp />;
   return <div className="auth-page">
     <AuthHeading eyebrow={role === 'mechanic' ? 'MECHANIC NETWORK' : tr('GOOD TO HAVE YOU HERE')} title={role === 'mechanic' ? 'Put your skills to work.' : tr('Your roadside buddy.')}>
       {role === 'mechanic' ? 'Sign in to your roadside workspace.' : tr('When your ride stops, we get you moving.')}
@@ -40,7 +43,7 @@ export function SignIn({ role = 'customer' }) {
       {error && <AuthNotice error>{tr(error)}</AuthNotice>}
       <div className="auth-actions">
         <AuthSubmit busy={busy}>{tr('Sign in')}</AuthSubmit>
-        <Link to={paths.signup} className="auth-secondary">{role === 'mechanic' ? 'Create a mechanic account' : tr('Create an account')}</Link>
+        <Link to={role === 'mechanic' ? paths.signup : '/signin?setup=1'} className="auth-secondary">{role === 'mechanic' ? 'Create a mechanic account' : tr('New here? Set up account & vehicle')}</Link>
       </div>
     </form>
     <p className="auth-legal">{tr('By continuing, you agree to our')} <LegalLinks />.</p>

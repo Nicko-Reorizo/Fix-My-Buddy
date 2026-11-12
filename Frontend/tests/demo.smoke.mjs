@@ -53,8 +53,9 @@ try {
     const menuPath = demoPages.find(entry => entry.file === item.file)?.path;
     if (menuPath !== item.path) await page.goto(`${base}${item.path}`);
     const isPlaceholder = pendingPages.some(entry => entry.file === item.file);
-    const expectedPath = item.label === 'Services' && !isPlaceholder ? '/request' : new URL(item.path, base).pathname;
-    await page.waitForURL(url => url.pathname === expectedPath);
+    const customerSetup = item.file === 'Frontend/src/pages/SignUp.jsx' && !isPlaceholder;
+    const expectedPath = customerSetup ? '/signin' : item.label === 'Services' && !isPlaceholder ? '/request' : new URL(item.path, base).pathname;
+    await page.waitForURL(url => url.pathname === expectedPath && (!customerSetup || url.searchParams.get('setup') === '1'));
     await page.waitForFunction(() => document.body.innerText.length > 40 && !document.querySelector('.buddy-splash'));
     assert.equal(errors.length, 0, `${item.file}: ${errors.join('\n')}`);
     const text = await page.locator('body').innerText();

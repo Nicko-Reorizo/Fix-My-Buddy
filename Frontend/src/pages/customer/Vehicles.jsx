@@ -1,6 +1,6 @@
 import { tr, trTemplate } from "../../i18n/translations";
 import { LoadingState } from '../../components/ui/LoadingState';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Check, CheckCircle2, Pencil, Plus, Trash2 } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthField, AuthNotice, AuthSubmit } from '../../components/auth/AuthControls';
@@ -78,8 +78,8 @@ export function Vehicles() {
       type: vehicle.type,
       make: vehicle.make,
       model: vehicle.model,
-      year: String(vehicle.year),
-      color: vehicle.color,
+      year: vehicle.year == null ? '' : String(vehicle.year),
+      color: vehicle.color || '',
       plate: vehicle.plate || ''
     });
     setEditingId(vehicle.id);
@@ -96,7 +96,7 @@ export function Vehicles() {
     setError('');
     setMessage('');
     if (Object.keys(validation).length) {
-      formRef.current.elements[Object.keys(validation)[0]].focus();
+      requestAnimationFrame(() => formRef.current.elements.namedItem(Object.keys(validation)[0])?.focus());
       return;
     }
     setBusy(true);
@@ -158,12 +158,12 @@ export function Vehicles() {
                 <span>
                   {selected ? <CheckCircle2 size={21} /> : <VehicleIcon type={vehicle.type} />}
                   <strong>
-                    {vehicle.make} {vehicle.model} · {vehicle.year}
+                    {[`${vehicle.make} ${vehicle.model}`, vehicle.year].filter(Boolean).join(' · ')}
                   </strong>
                   <b>{selected ? tr("Selected") : tr("Select")}</b>
                 </span>
                 <small>
-                  {[vehicle.color, vehicle.plate || 'No plate added'].join(' · ')}
+                  {[vehicle.color, vehicle.plate].filter(Boolean).join(' · ') || tr('Extra details can be added later.')}
                 </small>
               </button>
               <div className="customer-vehicle-tools">
@@ -187,7 +187,7 @@ export function Vehicles() {
       <div role="status" className="customer-save-status">
         {tr(message)}
       </div>
-      <form ref={formRef} onSubmit={submit} className="auth-form customer-vehicle-form">
+      <form ref={formRef} onSubmit={submit} className="auth-form customer-vehicle-form" noValidate>
         <div className="customer-section-heading">
           <h2>
             {editingId ? tr("Edit vehicle") : vehicles.length ? tr("Add another vehicle") : tr("Add your first vehicle")}
@@ -199,24 +199,7 @@ export function Vehicles() {
         }}>{tr("Cancel")}</button>}
         </div>
         <fieldset disabled={busy || vehicleStatus !== 'ready'} className="customer-fieldset">
-          <div className="auth-field">
-            <label htmlFor="vehicle-type">{tr("Vehicle type")}</label>
-            <select id="vehicle-type" name="type" value={fields.type} onChange={update} aria-invalid={Boolean(errors.type)} aria-describedby={errors.type ? 'type-error' : undefined}>
-              <option value="">{tr("Choose a type")}</option>
-              <option value="motorcycle">{tr("Motorcycle")}</option>
-              <option value="car">{tr("Car")}</option>
-            </select>
-            {errors.type && <p className="auth-field-error" id="type-error">
-                {errors.type}
-              </p>}
-          </div>
-          <AuthField id="make" name="make" label={tr("Brand")} value={fields.make} onChange={update} error={errors.make} maxLength={60} />
-          <div className="customer-form-row">
-            <AuthField id="model" name="model" label={tr("Model")} value={fields.model} onChange={update} error={errors.model} maxLength={80} />
-            <AuthField id="year" name="year" label={tr("Year")} type="number" inputMode="numeric" min="1900" max={new Date().getFullYear() + 1} value={fields.year} onChange={update} error={errors.year} />
-          </div>
-          <AuthField id="color" name="color" label={tr("Color")} value={fields.color} onChange={update} error={errors.color} maxLength={40} />
-          <AuthField id="plate" name="plate" label={tr("Plate number")} value={fields.plate} onChange={update} error={errors.plate} maxLength={15} hint={tr("Optional if your vehicle has not been assigned a plate.")} />
+          <VehicleFields fields={fields} errors={errors} onChange={update} />
           <p className="auth-hint">{tr("Your selected vehicle is included in every request.")} {localGarage ? tr(" Vehicle details are saved on this device.") : ''}
           </p>
           {error && <AuthNotice error>{tr(error)}</AuthNotice>}
@@ -239,4 +222,32 @@ export function Vehicles() {
         </div>
       </dialog>
     </>;
+}
+
+// The same short vehicle form is used during setup and in My vehicles.
+export function VehicleFields({ fields, errors, onChange }) {
+  const showDetails = Boolean(errors.year || errors.color || errors.plate);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  useEffect(() => { if (showDetails) setDetailsOpen(true); }, [showDetails]);
+  return <>
+    <div className="auth-field">
+      <label htmlFor="vehicle-type">{tr('Vehicle type')}</label>
+      <select id="vehicle-type" name="type" value={fields.type} onChange={onChange} required aria-invalid={Boolean(errors.type)} aria-describedby={errors.type ? 'type-error' : undefined}>
+        <option value="">{tr('Choose a type')}</option>
+        <option value="motorcycle">{tr('Motorcycle')}</option>
+        <option value="car">{tr('Car')}</option>
+      </select>
+      {errors.type && <p className="auth-field-error" id="type-error">{tr(errors.type)}</p>}
+    </div>
+    <div className="customer-form-row">
+      <AuthField id="vehicle-make" name="make" label={tr('Brand')} value={fields.make} onChange={onChange} error={errors.make} maxLength={60} required />
+      <AuthField id="vehicle-model" name="model" label={tr('Model')} value={fields.model} onChange={onChange} error={errors.model} maxLength={80} required />
+    </div>
+    <details className="auth-field" open={detailsOpen} onToggle={event => setDetailsOpen(event.currentTarget.open)}>
+      <summary>{tr('Extra vehicle details (optional)')}</summary>
+      <AuthField id="vehicle-year" name="year" label={tr('Year (optional)')} type="number" inputMode="numeric" min="1900" max={new Date().getFullYear() + 1} value={fields.year} onChange={onChange} error={errors.year} />
+      <AuthField id="vehicle-color" name="color" label={tr('Color (optional)')} value={fields.color} onChange={onChange} error={errors.color} maxLength={40} />
+      <AuthField id="vehicle-plate" name="plate" label={tr('Plate number (optional)')} value={fields.plate} onChange={onChange} error={errors.plate} maxLength={15} />
+    </details>
+  </>;
 }

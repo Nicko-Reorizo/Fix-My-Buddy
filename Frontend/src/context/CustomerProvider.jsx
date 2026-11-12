@@ -3,7 +3,7 @@ import {
   customerService,
   isCustomerApiConfigured,
 } from '../services/customerService';
-import { cleanPlate, validateVehicle } from '../utils/vehicleValidation';
+import { normalizeVehicle, validateVehicle } from '../utils/vehicleValidation';
 import { CustomerContext } from './customerContextValue';
 import { useAuth } from './useAuth';
 
@@ -126,14 +126,7 @@ function CustomerStore({ owner, user, children }) {
     if (remote && vehicleStatus !== 'ready') throw new Error('Load your vehicles before making changes.');
     const errors = validateVehicle(fields, garage.vehicles, id);
     if (Object.keys(errors).length) throw new Error(Object.values(errors)[0]);
-    const details = {
-      ...fields,
-      make: fields.make.trim(),
-      model: fields.model.trim(),
-      color: fields.color.trim(),
-      year: Number(fields.year),
-      plate: cleanPlate(fields.plate),
-    };
+    const details = normalizeVehicle(fields);
     const vehicle = remote
       ? await customerService.saveVehicle(details, id)
       : { ...details, id: id || crypto.randomUUID() };

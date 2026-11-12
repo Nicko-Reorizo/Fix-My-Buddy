@@ -3,6 +3,8 @@ import { validateRequestDraft } from '../utils/requestDraft.js';
 import { validEstimate } from '../utils/bookingValidation.js';
 import { validateTowingDestination } from '../utils/towingDestination.js';
 import { validTowingCondition } from '../utils/towingValidation.js';
+import { normalizeVehicle, validateVehicle, validateCustomerSetup } from '../utils/vehicleValidation.js';
+import { normalizePhone } from '../utils/authValidation.js';
 
 const clone = value => JSON.parse(JSON.stringify(value));
 const now = () => new Date().toISOString();
@@ -79,9 +81,21 @@ export function createDemoApi(storage, sessionStorage) {
       let account = state.users.find(item => item.email.toLowerCase() === body.email.trim().toLowerCase());
       if (account && account.role !== role) throw error('Use the matching customer/mechanic sign-in page.', 403);
       if (path.endsWith('signup') && account) throw error('This demo email already exists. Sign in instead.', 409);
+      const customerSetup = path.endsWith('signup') && role === 'customer';
+      if (customerSetup) {
+        const issues = validateCustomerSetup(body);
+        if (Object.keys(issues).length) throw error(Object.values(issues)[0]);
+      }
       if (!account) {
         account = { ...demoUsers[role], id: id('demo-user'), role, name: body.name || `Demo ${role}`, email: body.email.trim(), phone: body.phone || '', phoneVerified: true };
         state.users.push(account);
+      }
+      if (customerSetup) {
+        account.name = body.name.trim();
+        account.phone = body.phone ? normalizePhone(body.phone) : '';
+        account.phoneVerified = false;
+        account.emergencyContact = null;
+        state.vehicles.push({ ...normalizeVehicle(body.vehicle), id: id('demo-vehicle'), customerId: account.id });
       }
       // Presentation identities only: passwords are neither stored nor verified.
       return finish({ user: setUser(account) });
@@ -114,6 +128,24 @@ export function createDemoApi(storage, sessionStorage) {
     const collection = path.match(/^\/customers\/me\/(vehicles|reminders)(?:\/([^/]+))?$/);
     if (collection) {
       const [, key, itemId] = collection;
+      if (key === 'vehicles') {
+        const owner = user()?.id || demoUsers.customer.id;
+        // Older demo fixtures without an owner belong to the sample customer.
+        const vehicles = state.vehicles.filter(item => (item.customerId || demoUsers.customer.id) === owner);
+        if (method === 'GET') return finish({ vehicles });
+        const existing = vehicles.find(item => item.id === itemId);
+        if (itemId && !existing) throw error('Vehicle not found in this account.', 404);
+        if (method === 'DELETE') {
+          state.vehicles = state.vehicles.filter(item => item.id !== itemId);
+          return finish(null);
+        }
+        const details = { ...existing, ...body };
+        const issues = validateVehicle(details, vehicles, itemId);
+        if (Object.keys(issues).length) throw error(Object.values(issues)[0]);
+        const vehicle = { ...normalizeVehicle(details), id: itemId || id('demo-vehicle'), customerId: owner };
+        state.vehicles = [...state.vehicles.filter(item => item.id !== vehicle.id), vehicle];
+        return finish({ vehicle });
+      }
       if (method === 'GET') return finish({ [key]: state[key] });
       if (method === 'DELETE') { state[key] = state[key].filter(item => item.id !== itemId); return finish(null); }
       const item = { ...state[key].find(item => item.id === itemId), ...body, id: itemId || id('demo-item') };

@@ -107,10 +107,9 @@ export function MechanicLocationEditor({ value, onChange, disabled }) {
       <div ref={canvas} style={{ height: 280, width: '100%' }} role="region" aria-label="Mechanic location map. Drag the map, click a place, or use the arrow keys to position your pin." />
       <MapPin className="location-picker-pin" size={42} aria-hidden="true" />
     </div>
-    <p className="text-sm">{validCoordinates(value) ? `${value.latitude.toFixed(6)}, ${value.longitude.toFixed(6)} · ${value.source === 'gps' ? 'GPS location' : 'Selected map pin'}` : 'No location selected. Move the map, select an address result, or use GPS.'}</p>
-    <label htmlFor="mechanic-location-address">Address / landmark (optional)</label>
+    <p className="text-sm">{validCoordinates(value) ? (value.source === 'gps' ? 'GPS location selected.' : 'Map pin selected.') : 'No location selected. Move the map, select an address result, or use GPS.'}</p>    <label htmlFor="mechanic-location-address">Address / landmark (optional)</label>
     <input id="mechanic-location-address" className="auth-input" value={value?.address || ''} maxLength={300} disabled={!validCoordinates(value) || disabled} onChange={event => onChange({ ...value, address: event.target.value })} />
-    <p className="text-sm text-[rgb(var(--fmb-muted))]">An address search result sets the pin. Typing an address label alone does not change coordinates. Save availability to apply changes.</p>
+    <p className="text-sm text-[rgb(var(--fmb-muted))]">An address search result sets the pin. Typing an address label alone does not move the map pin. Save availability to apply changes.</p>
     {value?.source === 'manual' && <p className="text-sm">Customers will be matched to this pin. GPS will not replace it. Update the pin whenever you move, or choose GPS for automatic location updates.</p>}
     {error && <p role="alert" className="auth-error">{error}</p>}
   </fieldset>;

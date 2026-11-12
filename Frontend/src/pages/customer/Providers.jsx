@@ -39,6 +39,8 @@ export function Providers() {
       return;
     }
     const controller = new AbortController();
+    const searchStartedAt = Date.now();
+    let resultTimer;
     setSearchProviders([]);
     setStatus('loading');
     setSearchProviders([]);
@@ -65,12 +67,33 @@ export function Providers() {
         });
       }
     }).catch(problem => {
+    }, controller.signal).then(data => {
+      const showResults = () => {
+        if (controller.signal.aborted) return;
+        setSearchProviders(data.providers);
+        setStatus('ready');
+        const retained = data.providers.some(provider => provider.id === selection.current);
+        if (!retained) setSelectedProviderId('');
+        setAutoFallback(request.matchingMode === 'auto' && !data.recommendedProviderId);
+        const recommended = automaticProvider(data, request.matchingMode, selection.current);
+        if (recommended) {
+          setSelectedProviderId(recommended.id);
+          navigate('/providers/' + encodeURIComponent(recommended.id), {
+            replace: true
+          });
+        }
+      };
+      const remaining = Math.max(0, 900 - (Date.now() - searchStartedAt));
+      resultTimer = window.setTimeout(showResults, remaining);    }).catch(problem => {
       if (!controller.signal.aborted) {
         setError(problem.message);
         setStatus('error');
       }
     });
-    return () => controller.abort();
+    return () => {
+      controller.abort();
+      window.clearTimeout(resultTimer);
+    };
   }, [request, location, providerFilters, retry, ready, setSearchProviders, setSelectedProviderId, navigate]);
   function open(provider) {
     setSelectedProviderId(provider.id);
@@ -80,6 +103,17 @@ export function Providers() {
     navigate('/provider-filters?schedule=1');
   }
   return <RequestFrame title={tr("Your nearby buddies")} subtitle={status === 'ready' ? trTemplate(["", " available \xB7 ", " assistance"], [providers.length, request.issueType]) : tr("Find the right help around your pickup.")} backTo={request.serviceType === 'towing' ? '/request/towing' : '/request'}>
+  if (status === 'loading') return <RequestFrame title={tr("Searching for providers")} subtitle={tr("This can take a moment while we check who is available.")} backTo="/request/matching">
+    <section className="provider-loading provider-loading-screen" role="status" aria-live="polite" aria-busy="true">
+      <span className="provider-loading-icon"><LoaderCircle size={42} className="auth-spin" aria-hidden="true" /></span>
+      <h2>{tr("Looking for available buddies")}</h2>
+      <p>{tr("We are checking who can help near your pickup. You can stay on this screen while we search.")}</p>
+      <div className="provider-loading-skeletons" aria-hidden="true">
+        <div className="provider-skeleton" />
+        <div className="provider-skeleton" />
+      </div>
+    </section>
+  </RequestFrame>;  return <RequestFrame title={tr("Your nearby buddies")} subtitle={status === 'ready' ? trTemplate(["", " available \xB7 ", " assistance"], [providers.length, request.issueType]) : tr("Find the right help around your pickup.")} backTo="/request/matching">
     <div className="request-form">
       <div className="provider-tools">
         <Link className="provider-chip" to="/provider-filters"><ListFilter size={15} />{tr("Filters")} {filterCount(providerFilters) ? trTemplate([" \xB7 ", ""], [filterCount(providerFilters)]) : ''}</Link>
@@ -93,7 +127,7 @@ export function Providers() {
           ...current,
           sort: event.target.value
         }))}><option value="eta">{tr("Fastest arrival")}</option><option value="price">{tr("Lowest visit estimate")}</option><option value="rating">{tr("Highest rating")}</option><option value="distance">{tr("Nearest first")}</option></select></label>
-      {status === 'loading' && <div className="provider-loading" role="status"><LoaderCircle size={28} className="auth-spin" /><p>{tr("Finding available buddies...")}</p><div className="provider-skeleton" /><div className="provider-skeleton" /></div>}
+
       {status === 'setup' && <div className="provider-empty"><Search size={36} /><h2>{tr("Tell us what you need")}</h2><p>{tr(setupError || "Choose your vehicle, issue and pickup before searching.")}</p><Link className="auth-primary" to="/app">{tr("Request assistance")}</Link></div>}
       {status === 'error' && <div className="provider-empty" role="alert"><Search size={36} /><h2>{isProviderApiConfigured ? tr("Could not load buddies") : tr("Provider search is not connected yet")}</h2><p>{tr(error)}</p><button type="button" className="auth-secondary" onClick={() => setRetry(value => value + 1)}><RefreshCw size={18} />{tr("Try again")}</button><Link className="provider-text-link" to={request.serviceType === 'towing' ? '/request/towing' : '/confirm-location'}>{tr("Check pickup location")}</Link></div>}
       {status === 'ready' && !providers.length && <NoProviders radius={providerFilters.radiusKm} onExpand={() => setProviderFilters(current => ({

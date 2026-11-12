@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowRight, LocateFixed, MapPin, Flag } from 'lucide-react';
+import { ArrowRight, LocateFixed, MapPin, Flag, Search } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { RequestFrame } from '../../components/app/RequestFrame';
 import { RequestVehicle } from '../../components/app/RequestVehicle';
@@ -56,12 +56,13 @@ export function TowingRequest() {
       {gpsError && <p className="auth-error" role="alert">{tr(gpsError)}</p>}
 
       {hasPosition ? <PickupPreview compact onLocate={locate} locating={gpsStatus === 'loading'} /> : <div className="towing-map-empty"><MapPin size={26} /><p>{t('Use GPS to show a pickup map, or continue with your full pickup address.','Gamitin ang GPS para makita ang mapa, o magpatuloy gamit ang buong pickup address.')}</p></div>}
-      <fieldset className="settings-languages towing-destination-mode"><legend>{t('Choose your destination','Piliin ang iyong destinasyon')}</legend>{[
-        ['manual', t('Enter an address or repair shop','Maglagay ng address o talyer')],
-        ['nearby', t('Find a nearby repair shop','Maghanap ng malapit na talyer')]
-      ].map(([value,label]) => <label key={value}><input type="radio" name="destination-mode" checked={mode === value} onChange={() => {
+      <fieldset className="towing-question towing-destination-mode"><legend>{t('Choose your destination','Piliin ang iyong destinasyon')}</legend><div className="towing-mode-switch">{[
+        ['manual', Flag, t('Type an address','Mag-type ng address')],
+        ['nearby', Search, t('Nearby repair shop','Malapit na talyer')]
+      ].map(([value, Icon, label]) => <button key={value} type="button" className="provider-chip" aria-pressed={mode === value} onClick={() => {
+        if (mode === value) return;
         updateRequest({ destinationMode: value, destinationShop: null }); setError('');
-      }} />{label}</label>)}</fieldset>
+      }}><Icon size={22} />{label}</button>)}</div></fieldset>
       {mode === 'manual' ? <label className="request-field"><span className="request-label-icon"><Flag size={22} />{t('Destination','Destinasyon')}</span><input maxLength={300} value={request.destination} placeholder={t('Full address of your destination','Buong address ng iyong destinasyon')} onChange={event => { updateRequest({ destination: event.target.value, destinationShop: null }); setError(''); }} /></label>
         : <RepairShopPicker location={location} vehicleType={selectedVehicle.type} selected={request.destinationShop} onSelect={shop => { updateRequest({ destinationShop: shop, destination: shop.address }); setError(''); }} />}
       <TowingCondition value={request.towingCondition} onChange={value => { updateRequest({ towingCondition: value }); setError(''); }} />

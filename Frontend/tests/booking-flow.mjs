@@ -59,9 +59,9 @@ export async function checkEmergencyBooking(page, base, screenshots) {
   await page.getByRole('button', { name: 'Request Towing', exact: true }).click();
   await page.waitForURL(/\/request\/towing$/);
   await page.getByLabel('Destination', { exact: true }).fill('Magsaysay Avenue repair shop, Naga City');
-  await page.getByRole('combobox', { name: /Does it start\/run/ }).selectOption('no');
-  await page.getByRole('combobox', { name: /Does it roll freely/ }).selectOption('yes');
-  await page.getByRole('combobox', { name: /Is there collision damage/ }).selectOption('no');
+  await page.getByRole('group', { name: 'Does it start/run?' }).getByRole('button', { name: 'No', exact: true }).click();
+  await page.getByRole('group', { name: 'Does it roll freely?' }).getByRole('button', { name: 'Yes', exact: true }).click();
+  await page.getByRole('group', { name: 'Is there collision damage?' }).getByRole('button', { name: 'No', exact: true }).click();
   await page.getByRole('button', { name: 'Find towing providers', exact: true }).click();
   await page.waitForURL(/\/confirm-request$/);
   await page.locator('.provider-consent input').check();

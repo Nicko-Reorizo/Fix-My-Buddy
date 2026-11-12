@@ -86,7 +86,7 @@ export function ConfirmLocation() {
     updateRequest({
       vehicleId: selectedVehicle.id
     });
-    navigate('/request/matching');
+    navigate('/providers');
   }
   return <RequestFrame backTo="/request/details" title={tr("Confirm your location")} subtitle={tr("We'll send your buddy to this spot.")}>
     <form className="request-form" onSubmit={submit}>

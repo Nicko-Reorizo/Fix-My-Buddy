@@ -30,7 +30,7 @@ export function CustomerLayout() {
   }, [pathname, language]);
 
   return (
-    <RoleGuard allowedRoles={['customer']} signInPath="/signin">
+    <RoleGuard requireSession allowedRoles={['customer']} signInPath="/signin">
     <div className="auth-root customer-root">
       <a href="#customer-main" className="auth-skip">
         {t('Skip to content','Pumunta sa nilalaman')}

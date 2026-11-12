@@ -15,7 +15,7 @@ export function RequestFrame({
   } = useLocation();
   const { request } = useApp();
   const towing = request.serviceType === 'towing';
-  const step = towing ? { '/request/towing': 1, '/request/matching': 2, '/confirm-request': 3 }[pathname] : { '/request': 1, '/request/details': 2, '/confirm-location': 3, '/request/matching': 4 }[pathname];
+  const step = { [towing ? '/request/towing' : '/request']: 1, '/confirm-request': 2 }[pathname];
   return <section className="request-shell">
     <header className="request-header">
       <Link to={backTo} className="auth-back" aria-label={backTo === '/app' ? tr("Back to home") : tr("Back to previous step")}><ArrowLeft size={22} /><span>{tr("Back")}</span></Link>
@@ -23,7 +23,7 @@ export function RequestFrame({
       <span>{tr("ROADSIDE")}</span>
     </header>
     <div className="request-content" key={pathname}>
-      {step && <p className="request-progress">{trTemplate(['Step ', ' of ', ''], [step, towing ? 3 : 4])}</p>}
+      {step && <p className="request-progress">{trTemplate(['Step ', ' of ', ''], [step, 2])}</p>}
       <h1>{tr(title)}</h1><p className="request-subtitle">{tr(subtitle)}</p>
       {children}
     </div>

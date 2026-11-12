@@ -5,6 +5,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import { chromium } from '@playwright/test';
 import { demoPages } from '../src/demo/pages.js';
 import { readFileSync } from 'node:fs';
+import { checkEmergencyBooking } from './booking-flow.mjs';
 
 // Stay useful during concurrent page migration; enable original flow checks once complete.
 const pendingPages = demoPages.filter(item => readFileSync(new URL(`../../${item.file}`, import.meta.url), 'utf8').includes('awaiting migration'));
@@ -51,12 +52,13 @@ try {
     await buttons.nth(index).click();
     const menuPath = demoPages.find(entry => entry.file === item.file)?.path;
     if (menuPath !== item.path) await page.goto(`${base}${item.path}`);
-    await page.waitForTimeout(400);
+    const isPlaceholder = pendingPages.some(entry => entry.file === item.file);
+    const expectedPath = item.label === 'Services' && !isPlaceholder ? '/request' : new URL(item.path, base).pathname;
+    await page.waitForURL(url => url.pathname === expectedPath);
+    await page.waitForFunction(() => document.body.innerText.length > 40 && !document.querySelector('.buddy-splash'));
     assert.equal(errors.length, 0, `${item.file}: ${errors.join('\n')}`);
     const text = await page.locator('body').innerText();
     assert.ok(text.length > 40, `Empty screen: ${item.file}`);
-    const isPlaceholder = pendingPages.some(entry => entry.file === item.file);
-    const expectedPath = item.label === 'Services' && !isPlaceholder ? '/request' : new URL(item.path, base).pathname;
     assert.equal(new URL(page.url()).pathname, expectedPath, `Unexpected redirect from ${item.file}`);
     if (isPlaceholder) assert.ok(text.includes(`Page assigned to Member ${item.member} — awaiting migration`), `Missing placeholder: ${item.file}`);
     assert.ok(!text.includes('FRONTEND DEMO'), 'Unexpected top demo banner');
@@ -71,7 +73,7 @@ try {
   // Submit a booking through the existing confirmation screen.
   await visit(demoPages.find(item => item.label === 'ConfirmRequest'));
   await page.locator('.provider-consent input').check();
-  await page.getByRole('button', { name: 'Confirm booking & pay during service', exact: true }).click();
+  await page.getByRole('button', { name: 'Confirm & request help', exact: true }).click();
   await page.waitForURL(/\/bookings\/demo-booking-[^/]+\/service$/);
   // Review editing uses the unchanged customer review form and local persistence.
   await visit({ ...demoPages.find(item => item.label === 'History'), path: '/history?booking=demo-completed' });
@@ -98,6 +100,7 @@ try {
   await page.getByRole('button', { name: 'Send message', exact: true }).click();
   await page.getByText('Browser demo reply from the mechanic', { exact: true }).waitFor();
   }
+  if (pendingPages.length === 0) await checkEmergencyBooking(page, base, screenshots);
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.screenshot({ path: fileURLToPath(new URL('mechanic-desktop.png', screenshots)), fullPage: true });
   assert.equal(apiRequests.length, 0, `Unexpected backend requests: ${apiRequests.join('\n')}`);

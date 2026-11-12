@@ -13,6 +13,7 @@ import { terminalStatuses } from '../../utils/historyValidation';
 import { BookingSharing } from '../../components/customer/BookingSharing';
 import { AfterService } from '../../components/customer/AfterService';
 import { TowingJourney } from '../../components/customer/TowingJourney';
+import { ArrivalPin } from '../../components/customer/ArrivalPin';
 
 export function History() {
   const { user } = useAuth();
@@ -59,6 +60,7 @@ export function History() {
           </Link>
         </div>
       )}
+      {focused.serviceType === 'towing' && focused.status === 'en_route' && <ArrivalPin key={focused.id} bookingId={focused.id} />}
       <TowingJourney key={`${focused.id}-${focused.towing?.handover?.status}`} booking={focused} onRefresh={refreshData} />
       {focused.notes && <p className="customer-muted">{focused.notes}</p>}
       <BookingActions key={`${focused.id}-${focused.version}-${focused.status}-${focused.scheduledAt}`} booking={focused} />

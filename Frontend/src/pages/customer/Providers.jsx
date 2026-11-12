@@ -6,7 +6,7 @@ import { RequestFrame } from '../../components/app/RequestFrame';
 import { ProviderCard } from '../../components/app/ProviderCard';
 import { NoProviders } from './NoProviders';
 import { useApp } from '../../context/useApp';
-import { searchProviders, isProviderApiConfigured } from '../../services/providerService';
+import { searchProviders, getProvider, isProviderApiConfigured } from '../../services/providerService';
 import { validateRequestDraft } from '../../utils/requestDraft';
 import { automaticProvider } from '../../utils/providerApi';
 import { filterCount } from '../../utils/bookingValidation';
@@ -47,7 +47,7 @@ export function Providers() {
       ...request,
       location,
       filters: providerFilters
-    }, controller.signal).then(data => {
+    }, controller.signal).then(async data => {
       if (controller.signal.aborted) return;
       setSearchProviders(data.providers);
       setStatus('ready');
@@ -56,8 +56,11 @@ export function Providers() {
       setAutoFallback(request.matchingMode === 'auto' && !data.recommendedProviderId);
       const recommended = automaticProvider(data, request.matchingMode, selection.current);
       if (recommended) {
-        setSelectedProviderId(recommended.id);
-        navigate(`/providers/${encodeURIComponent(recommended.id)}`, {
+        const fresh = await getProvider(recommended.id, { request, location }, controller.signal);
+        if (controller.signal.aborted) return;
+        setSearchProviders(current => [...current.filter(item => item.id !== fresh.id), fresh]);
+        setSelectedProviderId(fresh.id);
+        navigate('/confirm-request', {
           replace: true
         });
       }
@@ -76,7 +79,7 @@ export function Providers() {
   function schedule() {
     navigate('/provider-filters?schedule=1');
   }
-  return <RequestFrame title={tr("Your nearby buddies")} subtitle={status === 'ready' ? trTemplate(["", " available \xB7 ", " assistance"], [providers.length, request.issueType]) : tr("Find the right help around your pickup.")} backTo="/request/matching">
+  return <RequestFrame title={tr("Your nearby buddies")} subtitle={status === 'ready' ? trTemplate(["", " available \xB7 ", " assistance"], [providers.length, request.issueType]) : tr("Find the right help around your pickup.")} backTo={request.serviceType === 'towing' ? '/request/towing' : '/request'}>
     <div className="request-form">
       <div className="provider-tools">
         <Link className="provider-chip" to="/provider-filters"><ListFilter size={15} />{tr("Filters")} {filterCount(providerFilters) ? trTemplate([" \xB7 ", ""], [filterCount(providerFilters)]) : ''}</Link>

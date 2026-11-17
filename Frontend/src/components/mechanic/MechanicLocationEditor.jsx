@@ -3,8 +3,9 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { LocateFixed, MapPin, Search } from 'lucide-react';
 import { getPosition } from '../../services/mechanic/location';
-import { validCoordinates } from '../../utils/locationAddress';
-import { sampleLocation } from '../../demo/fixtures';
+import { formatLocationAddress, validCoordinates } from '../../utils/locationAddress';
+
+const endpoint = (import.meta.env.VITE_GEOCODER_URL || 'https://photon.komoot.io').replace(/\/$/, '');
 
 export function MechanicLocationEditor({ value, onChange, disabled }) {
   const canvas = useRef(null);
@@ -71,7 +72,12 @@ export function MechanicLocationEditor({ value, onChange, disabled }) {
     const timeout = setTimeout(() => controller.abort(), 10000);
     setBusy(true); setError(''); setResults([]);
     try {
-      const places = [{ ...sampleLocation, source: 'manual', address: `${query.trim()} · Sample address, Naga City` }];
+      const url = new URL(`${endpoint}/api/`);
+      url.search = new URLSearchParams({ q: query.trim(), limit: '6', lang: 'en' });
+      const response = await fetch(url, { signal: controller.signal, credentials: 'omit' });
+      if (!response.ok) throw new Error('Address search is unavailable. Choose a map pin or use GPS.');
+      const data = await response.json();
+      const places = (data.features || []).map(feature => ({ latitude: feature.geometry?.coordinates?.[1], longitude: feature.geometry?.coordinates?.[0], source: 'manual', address: formatLocationAddress(feature.properties) })).filter(place => validCoordinates(place) && place.address);
       if (attempt !== revision.current) return;
       setResults(places);
       if (!places.length) setError('No addresses found. Try a city and street, or choose a map pin.');
@@ -107,9 +113,10 @@ export function MechanicLocationEditor({ value, onChange, disabled }) {
       <div ref={canvas} style={{ height: 280, width: '100%' }} role="region" aria-label="Mechanic location map. Drag the map, click a place, or use the arrow keys to position your pin." />
       <MapPin className="location-picker-pin" size={42} aria-hidden="true" />
     </div>
-    <p className="text-sm">{validCoordinates(value) ? (value.source === 'gps' ? 'GPS location selected.' : 'Map pin selected.') : 'No location selected. Move the map, select an address result, or use GPS.'}</p>    <label htmlFor="mechanic-location-address">Address / landmark (optional)</label>
+    <p className="text-sm">{validCoordinates(value) ? `${value.latitude.toFixed(6)}, ${value.longitude.toFixed(6)} · ${value.source === 'gps' ? 'GPS location' : 'Selected map pin'}` : 'No location selected. Move the map, select an address result, or use GPS.'}</p>
+    <label htmlFor="mechanic-location-address">Address / landmark (optional)</label>
     <input id="mechanic-location-address" className="auth-input" value={value?.address || ''} maxLength={300} disabled={!validCoordinates(value) || disabled} onChange={event => onChange({ ...value, address: event.target.value })} />
-    <p className="text-sm text-[rgb(var(--fmb-muted))]">An address search result sets the pin. Typing an address label alone does not move the map pin. Save availability to apply changes.</p>
+    <p className="text-sm text-[rgb(var(--fmb-muted))]">An address search result sets the pin. Typing an address label alone does not change coordinates. Save availability to apply changes.</p>
     {value?.source === 'manual' && <p className="text-sm">Customers will be matched to this pin. GPS will not replace it. Update the pin whenever you move, or choose GPS for automatic location updates.</p>}
     {error && <p role="alert" className="auth-error">{error}</p>}
   </fieldset>;

@@ -1,6 +1,4 @@
 import React from 'react';
-import { initializeDemo } from './demo/localApi.js';
-import { DemoToolbar } from './demo/DemoToolbar';
 import './styles/mechanic.css';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -17,14 +15,13 @@ import './styles/location-picker.css';
 import './styles/brand.css';
 import './styles/policies.css';
 
-initializeDemo();
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <ThemeProvider><AppProvider>
       <AuthProvider>
         <CustomerProvider>
           <BrowserRouter>
-            <LocaleProvider><DemoToolbar /><App /></LocaleProvider>
+            <LocaleProvider><App /></LocaleProvider>
           </BrowserRouter>
         </CustomerProvider>
       </AuthProvider>

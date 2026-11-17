@@ -25,10 +25,12 @@ test('provider loading keeps fresh-quote confirmation, unavailable and retry sta
   const fresh = { ...provider, estimate: { ...provider.estimate, id: 'fresh-quote' } };
   let mode = 'auto', resolveQuote;
   const saved = [], selected = [];
-  const api = t.mock.method(demoApi, 'request', async path => {
-    if (mode === 'error') throw new Error('Provider search unavailable.');
-    if (path.endsWith('/quote')) return new Promise(resolve => { resolveQuote = resolve; });
-    return { providers: mode === 'empty' ? [] : [provider], recommendedProviderId: mode === 'empty' ? null : provider.id };
+  // Mock the network boundary: services call the real backend under /api.
+  const api = t.mock.method(globalThis, 'fetch', async input => {
+    const path = new URL(String(input), 'http://localhost').pathname;
+    if (mode === 'error') return Response.json({ error: 'Provider search unavailable.' }, { status: 500 });
+    if (path.endsWith('/quote')) return new Promise(resolve => { resolveQuote = body => resolve(Response.json(body)); });
+    return Response.json({ providers: mode === 'empty' ? [] : [provider], recommendedProviderId: mode === 'empty' ? null : provider.id });
   });
   const value = {
     request: { serviceType: 'mechanic', vehicleId: 'demo-vehicle', issueType: 'Battery', notes: '', landmark: '', matchingMode: 'auto' },
